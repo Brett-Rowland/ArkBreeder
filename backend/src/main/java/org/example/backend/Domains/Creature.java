@@ -7,20 +7,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.ValueObjects.StatsDefaults;
 
-@Table (name = "dino_base_stats")
+import java.util.List;
+
+@Table (name = "creature_base")
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Species {
+public class Creature {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long speciesId;
+    private long creatureId;
 
     @Column(length = 127)
-    private String speciesName;
+    private String creatureName;
 
+    @OneToMany(mappedBy = "creature")
+    private List<BreedingLine> breedingLines;
+
+    @OneToMany(mappedBy = "creature")
+    private List<ColorRegions> colorRegions;
 
     @Embedded
     @AttributeOverrides({

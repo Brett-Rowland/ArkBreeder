@@ -1,0 +1,14 @@
+package org.example.backend.Repo;
+
+import org.example.backend.Domains.Dinosaur;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface DinosaurRepo extends JpaRepository<Dinosaur, Long> {
+    Dinosaur getDinosaurByDino_id(Long dinoId);
+//    List<Dinosaur> findByBreedingLine_BreedingLineId(Long lineId);
+
+}

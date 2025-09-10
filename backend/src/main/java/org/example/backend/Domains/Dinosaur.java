@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.ValueObjects.Stats;
 
+import java.util.List;
+
 /* This class holds basic dinosaur characteristics from each breeding lines. So this holds each personal dino
     Does not hold any of the base stats or other things like that.
 */
@@ -22,6 +24,13 @@ public class Dinosaur {
 
     @Column (nullable = true, length = 127)
     private String dinosaur_nickname;
+
+    @ManyToOne
+    @JoinColumn(name = "breeding_line_id")
+    private BreedingLine breedingLineId;
+
+    @OneToMany(mappedBy = "dinosaur")
+    private List<DinoColors> dinoColors;
 
     @Embedded
     @AttributeOverrides({

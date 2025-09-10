@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.ValueObjects.Color;
 
+import java.util.List;
+
 @Data
 @Table(name = "ark_colors")
 @Entity
@@ -16,6 +18,10 @@ public class ArkColors {
 
     @Id
     private String id;
+
+
+    @OneToMany(mappedBy = "arkColor")
+    private List<DinoColors> dinoColors;
 
     @Embedded
     @AttributeOverrides({

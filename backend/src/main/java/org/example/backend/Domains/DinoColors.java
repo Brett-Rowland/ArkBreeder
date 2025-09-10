@@ -6,14 +6,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Entity
-//@Table("dino_colors")
+@Entity
+@Table(name  =  "dino_colors")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DinoColors {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long dinoColorID;
+
     @Column
-    private int color_region;
+    private int colorRegion;
+
+    @ManyToOne
+    @JoinColumn(name = "color_id")
+    private ArkColors arkColor;
+
+    @ManyToOne
+    @JoinColumn(name = "dino_id")
+    private Dinosaur dinosaur;
 
 }
