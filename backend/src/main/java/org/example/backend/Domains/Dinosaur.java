@@ -20,7 +20,8 @@ public class Dinosaur {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dino_id;
+    @Column(name = "dino_id")
+    private Long dinoId;
 
     @Column (nullable = true, length = 127)
     private String dinosaur_nickname;

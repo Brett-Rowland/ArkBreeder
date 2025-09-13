@@ -21,7 +21,7 @@ public class DinosaurService {
     }
 
     public void updateDinosaur(Dinosaur dinosaur, Long dinoId){
-        Dinosaur dino = dinosaurRepo.getDinosaurByDino_id(dinoId);
+        Dinosaur dino = dinosaurRepo.getDinosaurByDinoId(dinoId);
         dino.setDinosaur_nickname(dinosaur.getDinosaur_nickname());
         dino.setHealth(dinosaur.getHealth());
         dino.setDinoColors(dinosaur.getDinoColors());
@@ -39,12 +39,12 @@ public class DinosaurService {
     }
 
     public void renameDinosaur(Long dinoId, String newName) {
-        Dinosaur dino = dinosaurRepo.getDinosaurByDino_id(dinoId);
+        Dinosaur dino = dinosaurRepo.getDinosaurByDinoId(dinoId);
         dino.setDinosaur_nickname(newName);
         dinosaurRepo.save(dino);
     }
 
     public Dinosaur grabDino(Long dinoId) {
-        return dinosaurRepo.getDinosaurByDino_id(dinoId);
+        return dinosaurRepo.getDinosaurByDinoId(dinoId);
     }
 }

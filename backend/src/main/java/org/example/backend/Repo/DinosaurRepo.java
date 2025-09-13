@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface DinosaurRepo extends JpaRepository<Dinosaur, Long> {
-    Dinosaur getDinosaurByDino_id(Long dinoId);
+    Dinosaur getDinosaurByDinoId(Long DinosaurId);
 //    List<Dinosaur> findByBreedingLine_BreedingLineId(Long lineId);
 
 }
