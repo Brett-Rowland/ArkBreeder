@@ -17,6 +17,8 @@ public class CreatureController {
 
     @PostMapping("/new-species")
     public ResponseEntity<?> newCreature(@RequestBody Creature species) {
+//        Do a creation of the color regions that are being chosen within this. So we can choose them later on.
+
         return new ResponseEntity<>(creatureService.createCreature(species), HttpStatus.OK);
     }
 
@@ -26,5 +28,7 @@ public class CreatureController {
         System.out.println(creatureName);
         return new ResponseEntity<>(creatureService.getCreature(creatureName), HttpStatus.OK);
     }
+
+//    Grab a list of all the species added to the DB
 
 }
