@@ -1,5 +1,6 @@
 package org.example.backend.Domains;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,10 +37,12 @@ public class Users {
 
 //    Join to the Breeding Lines
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<BreedingLine> breedingLines;
 
 
     @OneToMany(mappedBy="user")
+    @JsonManagedReference
     private List<Presets> presets;
 
 

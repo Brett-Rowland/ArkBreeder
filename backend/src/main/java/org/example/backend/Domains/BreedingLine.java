@@ -1,5 +1,6 @@
 package org.example.backend.Domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class BreedingLine {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private Users user;
 
 

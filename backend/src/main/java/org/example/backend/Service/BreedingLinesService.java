@@ -6,6 +6,7 @@ import org.example.backend.Domains.BreedingLine;
 import org.example.backend.Domains.Dinosaur;
 import org.example.backend.Domains.Users;
 import org.example.backend.Repo.BreedingLinesRepo;
+import org.example.backend.Repo.CreatureRepo;
 import org.example.backend.Repo.DinosaurRepo;
 import org.example.backend.Repo.UsersRepo;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class BreedingLinesService {
     private final BreedingLinesRepo breedingLinesRepo;
     private final DinosaurRepo dinosaurRepo;
     private final UsersRepo usersRepo;
+    private final CreatureRepo creatureRepo;
 
     public List<Dinosaur> grabDinosaurs(Long lineId) {
 //        return dinosaurRepo.findByBreedingLine_BreedingLineId(lineId);
@@ -26,8 +28,9 @@ public class BreedingLinesService {
     }
 
 
-    public void createLine(BreedingLine breedingLine, Long token) {
+    public void createLine(BreedingLine breedingLine, Long token, Long creatureId) {
         breedingLine.setUser(usersRepo.getUsersByToken(token));
+        breedingLine.setCreature(creatureRepo.getCreatureByCreatureId(creatureId));
         breedingLinesRepo.save(breedingLine);
     }
 

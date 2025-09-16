@@ -1,6 +1,8 @@
 package org.example.backend.Domains;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class Creature {
     private List<BreedingLine> breedingLines;
 
     @OneToMany(mappedBy = "creature")
+    @JsonManagedReference
     private List<ColorRegions> colorRegions;
 
     @Embedded

@@ -1,9 +1,11 @@
 package org.example.backend.Domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -17,6 +19,8 @@ public class ColorRegions {
 
     @ManyToOne
     @JoinColumn(name = "species_id")
+    @JsonBackReference
+    @ToString.Exclude
     private Creature creature;
 
     @Column(name = "color_region")

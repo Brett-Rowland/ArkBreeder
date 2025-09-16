@@ -15,9 +15,9 @@ public class BreedingLinesController {
     private BreedingLinesService breedingLinesService;
 
 //    Create a Breeding Line
-    @PostMapping("/{token}/create")
-    public ResponseEntity<?> createLine(@PathVariable Long token ,@RequestBody BreedingLine breedingLine) {
-        breedingLinesService.createLine(breedingLine, token);
+    @PostMapping("/{token}/create/{creatureId}")
+    public ResponseEntity<?> createLine(@PathVariable Long token, @PathVariable Long creatureId ,@RequestBody BreedingLine breedingLine) {
+        breedingLinesService.createLine(breedingLine, token, creatureId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

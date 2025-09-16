@@ -1,5 +1,6 @@
 package org.example.backend.Domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class Presets {
     private String presetName;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Users user;
 
     @OneToOne(cascade = CascadeType.ALL)

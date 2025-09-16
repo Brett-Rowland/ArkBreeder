@@ -11,4 +11,6 @@ public interface CreatureRepo extends JpaRepository<Creature,Long> {
 
     @Query("SELECT cs from Creature cs Where UPPER(cs.creatureName) = UPPER(?1)")
     public Creature getCreatureByName(String creatureName);
+
+    Creature getCreatureByCreatureId(long creatureId);
 }
