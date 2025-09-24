@@ -23,13 +23,13 @@ public class DinosaurService {
     public void updateDinosaur(Dinosaur dinosaur, Long dinoId){
         Dinosaur dino = dinosaurRepo.getDinosaurByDinoId(dinoId);
         dino.setDinosaur_nickname(dinosaur.getDinosaur_nickname());
-        dino.setHealth(dinosaur.getHealth());
         dino.setDinoColors(dinosaur.getDinoColors());
-        dino.setFood(dinosaur.getFood());
-        dino.setMelee(dinosaur.getMelee());
-        dino.setWeight(dinosaur.getWeight());
+        dino.setHealth(dinosaur.getHealth());
         dino.setStamina(dinosaur.getStamina());
         dino.setOxygen(dinosaur.getOxygen());
+        dino.setWeight(dinosaur.getWeight());
+        dino.setFood(dinosaur.getFood());
+        dino.setMelee(dinosaur.getMelee());
         dinosaurRepo.save(dinosaur);
 
     }

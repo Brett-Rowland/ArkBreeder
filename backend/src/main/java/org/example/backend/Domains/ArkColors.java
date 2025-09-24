@@ -17,7 +17,7 @@ import java.util.List;
 public class ArkColors {
 
     @Id
-    private String id;
+    private long id;
 
 
     @OneToMany(mappedBy = "arkColor")
