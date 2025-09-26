@@ -19,6 +19,11 @@ import java.util.List;
 @NoArgsConstructor
 public class Dinosaur {
 
+    public enum Gender {
+        MALE,
+        FEMALE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dino_id")
