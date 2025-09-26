@@ -25,8 +25,8 @@ public class ArkColors {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="colorName", column = @Column(name = "color_name")),
-            @AttributeOverride(name="colorHex", column = @Column(name = "color_hex"))
+            @AttributeOverride(name = "colorName", column = @Column(name = "color_name")),
+            @AttributeOverride(name = "colorHex", column = @Column(name = "color_hex"))
     })
     private Color color;
 }

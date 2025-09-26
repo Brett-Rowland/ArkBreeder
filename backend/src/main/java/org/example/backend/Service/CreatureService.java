@@ -17,7 +17,7 @@ public class CreatureService {
     private final CreatureRepo creatureRepo;
     private final ColorRegionRepo colorRegionRepo;
 
-    public String createCreature(Creature creature) {
+    void inputCreature(Creature creature){
         List<ColorRegions> colorRegionsList = creature.getColorRegions();
 
         creatureRepo.save(creature);
@@ -26,6 +26,10 @@ public class CreatureService {
             colorRegions.setCreature(creature);
             colorRegionRepo.save(colorRegions);
         }
+    }
+
+    public String createCreature(Creature creature) {
+        inputCreature(creature);
         return "Created Creature Successfully";
     }
 
@@ -36,6 +40,13 @@ public class CreatureService {
 
     public List<Creature> getCreatures() {
         return creatureRepo.findAll();
+    }
+
+    public String createCreatureList(List<Creature> creatures) {
+        for (Creature creature : creatures) {
+            inputCreature(creature);
+        }
+        return "Created Creatures Successfully";
     }
 
 }

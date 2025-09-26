@@ -13,6 +13,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ColorRegions {
+
+
+    public enum Visibility {
+        NOT_VISIBLE,
+        VISIBLE_COLOR,
+        VISIBLE_DATA
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long DCRId;
@@ -28,4 +36,8 @@ public class ColorRegions {
 
     @Column(name = "region_descriptor", length = (127))
     private String regionDescriptor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility")
+    private Visibility visibility = Visibility.VISIBLE_COLOR;
 }
