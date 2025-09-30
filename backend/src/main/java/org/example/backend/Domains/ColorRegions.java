@@ -13,8 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ColorRegions {
-
-
     public enum Visibility {
         NOT_VISIBLE,
         VISIBLE_COLOR,
@@ -27,7 +25,7 @@ public class ColorRegions {
 
     @ManyToOne
     @JoinColumn(name = "species_id")
-    @JsonBackReference
+    @JsonBackReference("creature-regions")
     @ToString.Exclude
     private Creature creature;
 

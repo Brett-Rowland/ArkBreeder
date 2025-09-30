@@ -2,6 +2,7 @@ package org.example.backend.Controller;
 
 
 import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.DinosaurTransfer;
 import org.example.backend.Domains.Dinosaur;
 import org.example.backend.Service.DinosaurService;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,13 @@ public class DinosaurController {
 
 //    Create a Dinosaur
     @PostMapping("/{lineId}/create")
-    public ResponseEntity<?> createDinosaur(@PathVariable Long lineId, @RequestBody Dinosaur dinosaur) {
-        dinosaurService.createDinosaur(dinosaur, lineId);
-        return  ResponseEntity.ok().build();
+    public ResponseEntity<?> createDinosaur(@PathVariable Long lineId, @RequestBody DinosaurTransfer dinosaur) throws Exception {
+        try {
+            dinosaurService.createDinosaur(dinosaur, lineId);
+            return  ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 

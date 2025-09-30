@@ -1,7 +1,7 @@
 package org.example.backend.Controller;
 
 import lombok.AllArgsConstructor;
-import org.example.backend.Domains.Creature;
+import org.example.backend.DTOs.CreatureTransfer;
 import org.example.backend.Service.CreatureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class CreatureController {
     private final CreatureService creatureService;
 //    Makes a new base creature with it allowing for the color regions
     @PostMapping("/new-species")
-    public ResponseEntity<?> newCreature(@RequestBody Creature species) {
+    public ResponseEntity<?> newCreature(@RequestBody CreatureTransfer species) {
         return new ResponseEntity<>(creatureService.createCreature(species), HttpStatus.OK);
     }
 
@@ -35,7 +35,7 @@ public class CreatureController {
     }
 
     @PostMapping("/species-list")
-    public ResponseEntity<?> newCreatureList(@RequestBody List<Creature> creatures) {
+    public ResponseEntity<?> newCreatureList(@RequestBody List<CreatureTransfer> creatures) {
         return new ResponseEntity<>(creatureService.createCreatureList(creatures), HttpStatus.OK);
     }
 

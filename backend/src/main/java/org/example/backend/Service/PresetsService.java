@@ -1,5 +1,6 @@
 package org.example.backend.Service;
 
+import lombok.AllArgsConstructor;
 import org.example.backend.Domains.Presets;
 import org.example.backend.Domains.Settings;
 import org.example.backend.Domains.Users;
@@ -11,6 +12,7 @@ import java.util.List;
 
 
 @Service
+@AllArgsConstructor
 public class PresetsService {
 
     SettingsRepo settingsRepo;
@@ -45,6 +47,12 @@ public class PresetsService {
         preset.setPresetName(presetName);
         presetsRepo.save(preset);
         settingsRepo.deleteBySettingsId(oldSettingsId); // clean up old one
+    }
 
+
+    public void createPreset(Presets preset, Long token){
+        preset.setUser(usersRepo.getUsersByToken(token));
+        settingsRepo.save(preset.getSettings());
+        presetsRepo.save(preset);
     }
 }

@@ -53,6 +53,13 @@ public class ColorsController {
     }
 
 
+    @PostMapping("/list")
+    ResponseEntity<?> addColors(@RequestBody List<ArkColors> arkColors) {
+        colorsService.createColorList(arkColors);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
 
 
 }

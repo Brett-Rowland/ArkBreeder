@@ -18,7 +18,6 @@ public class UsersController {
 
     private final UsersService usersService;
     private final BreedingLinesService breedingLinesService;
-    private final PresetsService settingsService;
 
     //    Create an Account
     @PostMapping("/create_account")

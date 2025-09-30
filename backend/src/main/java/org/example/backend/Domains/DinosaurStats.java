@@ -6,29 +6,33 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.example.backend.ValueObjects.Stats;
 
+@Table(name = "dinosaur_stats")
 @Entity
-@Table(name  =  "dino_colors")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DinoColors {
+public class DinosaurStats {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dinoColorID;
+    private Long id;
 
-    @Column
-    private int colorRegion;
 
-    @ManyToOne
-    @JoinColumn(name = "colorId")
-    @JsonBackReference("color-dinosaur")
-    private ArkColors arkColor;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BaseStats.STATS stats;
+
 
     @ManyToOne
-    @JoinColumn(name = "dino_id")
-    @JsonBackReference("dino-colors")
+    @JoinColumn(name = "dinoId")
+    @JsonBackReference
+    @ToString.Exclude
     private Dinosaur dinosaur;
 
+
+    @Embedded
+    private Stats value;
 }

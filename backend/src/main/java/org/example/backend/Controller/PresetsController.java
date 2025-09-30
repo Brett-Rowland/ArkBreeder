@@ -2,9 +2,10 @@ package org.example.backend.Controller;
 
 
 import lombok.AllArgsConstructor;
+import org.example.backend.Domains.Presets;
 import org.example.backend.Domains.Settings;
 import org.example.backend.Service.PresetsService;
-import org.springframework.data.repository.query.Param;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,9 @@ public class PresetsController {
     }
 
 
-
-
-
+    @PostMapping("{token}/preset")
+    ResponseEntity<?> createPreset(@RequestBody Presets preset, @PathVariable Long token) {
+        presetsService.createPreset(preset, token);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
