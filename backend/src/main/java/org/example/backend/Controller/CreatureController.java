@@ -2,6 +2,7 @@ package org.example.backend.Controller;
 
 import lombok.AllArgsConstructor;
 import org.example.backend.DTOs.CreatureInput;
+import org.example.backend.Domains.Creature;
 import org.example.backend.Service.CreatureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,11 @@ public class CreatureController {
     @PostMapping("/species-list")
     public ResponseEntity<?> newCreatureList(@RequestBody List<CreatureInput> creatures) {
         return new ResponseEntity<>(creatureService.createCreatureList(creatures), HttpStatus.OK);
+    }
+
+    @PostMapping("/species-list-old")
+    public ResponseEntity<?> oldCreatureList(@RequestBody List<Creature> creatures){
+        return new ResponseEntity<>(creatureService.createCreatureListOld(creatures), HttpStatus.OK);
     }
 
 

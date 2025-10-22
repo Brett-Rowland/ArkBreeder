@@ -9,6 +9,7 @@ import org.example.backend.Domains.Creature;
 import org.example.backend.Repo.BaseStatsRepo;
 import org.example.backend.Repo.ColorRegionRepo;
 import org.example.backend.Repo.CreatureRepo;
+import org.example.backend.ValueObjects.Color;
 import org.example.backend.ValueObjects.StatsDefaults;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,26 @@ public class CreatureService {
 
     }
 
+    public void inputCreatureOld(Creature creature){
+
+//        Grab the stats and color regions
+        List<ColorRegions> colorRegions = creature.getColorRegions();
+
+        for (ColorRegions cr : colorRegions){
+            cr.setCreature(creature);
+        }
+
+        List<BaseStats> baseStats = creature.getBaseStats();
+        for (BaseStats bs : baseStats){
+            bs.setCreature(creature);
+        }
+
+
+        creatureRepo.save(creature);
+        colorRegionRepo.saveAll(colorRegions);
+        baseStatsRepo.saveAll(baseStats);
+    }
+
     public String createCreature(CreatureInput creature) {
         inputCreature(creature);
         return "Created Creature Successfully";
@@ -78,4 +99,10 @@ public class CreatureService {
         return "Created Creatures Successfully";
     }
 
+    public String createCreatureListOld(List<Creature> creatures){
+        for (Creature creature : creatures){
+            inputCreatureOld(creature);
+        }
+        return "Created Creatures Succesfully";
+    }
 }
