@@ -21,7 +21,7 @@ public class DinosaurStats {
     private Long id;
 
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private BaseStats.STATS stats;
 

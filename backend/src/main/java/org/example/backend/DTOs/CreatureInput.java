@@ -6,7 +6,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class CreatureTransfer {
+public class CreatureInput {
 
     String creatureName;
     String type;

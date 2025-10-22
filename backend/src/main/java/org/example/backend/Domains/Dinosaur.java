@@ -47,4 +47,24 @@ public class Dinosaur {
     @OneToMany(mappedBy = "dinosaur")
     @JsonManagedReference
     private List<DinosaurStats> dinosaurStats;
+
+    @Column()
+    private boolean tamed = true;
+
+    @Column(name = "taming_effect")
+    private float tamingEffectiveness;
+
+    public void sortStats(){
+        List<DinosaurStats> tempStats = dinosaurStats;
+
+//        for (int i = 0; i<tempStats.size()-1; i++){
+//            if (BaseStats.STATS.valueOf(String.valueOf(tempStats.get(i).getStats())) > temp){
+//
+//            }
+//
+//
+//
+//
+//        }
+    }
 }

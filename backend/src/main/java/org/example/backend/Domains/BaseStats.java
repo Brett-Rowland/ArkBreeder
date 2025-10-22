@@ -22,7 +22,7 @@ public class BaseStats {
     private Long id;
 
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private STATS stats;
 

@@ -2,7 +2,7 @@ package org.example.backend.Service;
 
 
 import lombok.AllArgsConstructor;
-import org.example.backend.DTOs.DinosaurTransfer;
+import org.example.backend.DTOs.DinosaurInput;
 import org.example.backend.Domains.*;
 import org.example.backend.Repo.*;
 import org.example.backend.ValueObjects.Stats;
@@ -23,7 +23,7 @@ public class DinosaurService {
     ArkColorsRepo arkColorsRepo;
 
 
-    public void createDinosaur(DinosaurTransfer dinosaur, Long lineId) throws Exception {
+    public void createDinosaur(DinosaurInput dinosaur, Long lineId) throws Exception {
         Dinosaur newDinosaur = new Dinosaur();
         newDinosaur.setDinosaurNickname(dinosaur.getNickname());
         BreedingLine breedingLine = breedingLinesRepo.getBreedingLineByBreedingLineId(lineId);

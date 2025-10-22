@@ -3,6 +3,7 @@ package org.example.backend.Controller;
 import lombok.AllArgsConstructor;
 import org.example.backend.Domains.BreedingLine;
 import org.example.backend.Service.BreedingLinesService;
+import org.example.backend.Service.ComputationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class BreedingLinesController {
 
     private BreedingLinesService breedingLinesService;
+    private ComputationService computationService;
 
 //    Create a Breeding Line
     @PostMapping("/{token}/create/{creatureId}")
@@ -44,6 +46,11 @@ public class BreedingLinesController {
     public  ResponseEntity<?> deleteLine(@PathVariable Long lineId) {
         breedingLinesService.deleteLine(lineId);
         return new  ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{lineId}/computed")
+    public ResponseEntity<?> getLineComputed(@PathVariable Long lineId){
+        return new ResponseEntity<>(computationService.lineComputation(lineId), HttpStatus.OK);
     }
 
 

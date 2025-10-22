@@ -2,7 +2,7 @@ package org.example.backend.Service;
 
 import lombok.AllArgsConstructor;
 
-import org.example.backend.DTOs.CreatureTransfer;
+import org.example.backend.DTOs.CreatureInput;
 import org.example.backend.Domains.BaseStats;
 import org.example.backend.Domains.ColorRegions;
 import org.example.backend.Domains.Creature;
@@ -23,7 +23,7 @@ public class CreatureService {
     private final ColorRegionRepo colorRegionRepo;
     private final BaseStatsRepo baseStatsRepo;
 
-    void inputCreature(CreatureTransfer creature){
+    void inputCreature(CreatureInput creature){
         Creature newCreature = new Creature();
         List<ColorRegions> colorRegions = new ArrayList<>();
         List<BaseStats> stats = new ArrayList<>();
@@ -57,7 +57,7 @@ public class CreatureService {
 
     }
 
-    public String createCreature(CreatureTransfer creature) {
+    public String createCreature(CreatureInput creature) {
         inputCreature(creature);
         return "Created Creature Successfully";
     }
@@ -71,8 +71,8 @@ public class CreatureService {
         return creatureRepo.findAll();
     }
 
-    public String createCreatureList(List<CreatureTransfer> creatures) {
-        for (CreatureTransfer creature : creatures) {
+    public String createCreatureList(List<CreatureInput> creatures) {
+        for (CreatureInput creature : creatures) {
             inputCreature(creature);
         }
         return "Created Creatures Successfully";

@@ -28,4 +28,8 @@ public class Presets {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "settings_id") // No need for referencedColumnName
     private Settings settings;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "breeding_line_id")
+    private BreedingLine breedingLine;
 }
