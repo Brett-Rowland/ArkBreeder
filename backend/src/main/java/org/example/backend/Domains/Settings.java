@@ -44,6 +44,21 @@ public class Settings {
     @Column(name = "melee_scale_factor")
     private Float meleeScaleFactor;
 
+    @Column(name = "health_additive")
+    private Float healthAdditive;
+
+    @Column(name = "health_multiplicand")
+    private Float healthMultiplicand;
+
+    @Column (name = "food_multiplicand")
+    private Float foodMultiplicand;
+
+    @Column(name = "melee_additive")
+    private Float meleeAdditive;
+
+    @Column(name = "melee_multiplicand")
+    private Float meleeMultiplicand;
+
     @Column(name = "single_player")
     private Boolean singlePlayer;
 

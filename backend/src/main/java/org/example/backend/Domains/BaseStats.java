@@ -15,7 +15,7 @@ import org.example.backend.ValueObjects.StatsDefaults;
 @NoArgsConstructor
 public class BaseStats {
     public enum STATS{
-        HEALTH, STAMINA, WEIGHT, MELEE, FOOD, OXYGEN, CRAFTING
+        HEALTH, STAMINA, FOOD, WEIGHT, OXYGEN, MELEE, CRAFTING
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class BaseStats {
     @Column(nullable = false)
     private STATS stats;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creatureId")
     @JsonBackReference("creature-base")
     @ToString.Exclude

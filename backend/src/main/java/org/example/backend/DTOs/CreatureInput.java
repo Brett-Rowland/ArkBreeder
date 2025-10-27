@@ -9,17 +9,23 @@ import lombok.Data;
 public class CreatureInput {
 
     String creatureName;
-    String type;
 
 
 //    Color Regions
     String [] colorRegionDescriptor;
 
 //    This holds what color regions and color region Visibility
+//    Example
+//    [0,1]
+//    Color Region 0, VISIBLE COLOR (From Color Regions ENUM)
     int [][] colorRegions;
 
 //    Base Stats
-//    Base, Increment, Type
+//    [Base, Increment Percentage, Stat Type]
     int[][] stats;
+
+//  Stat
+//    [Additive %, Multiplicant %, Stat Type]
+    float[][] statModifiers;
 
 }

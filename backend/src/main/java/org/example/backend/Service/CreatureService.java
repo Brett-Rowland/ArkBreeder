@@ -6,10 +6,11 @@ import org.example.backend.DTOs.CreatureInput;
 import org.example.backend.Domains.BaseStats;
 import org.example.backend.Domains.ColorRegions;
 import org.example.backend.Domains.Creature;
+import org.example.backend.Domains.StatModifiers;
 import org.example.backend.Repo.BaseStatsRepo;
 import org.example.backend.Repo.ColorRegionRepo;
 import org.example.backend.Repo.CreatureRepo;
-import org.example.backend.ValueObjects.Color;
+import org.example.backend.Repo.StatModifierRepo;
 import org.example.backend.ValueObjects.StatsDefaults;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,13 @@ public class CreatureService {
     private final CreatureRepo creatureRepo;
     private final ColorRegionRepo colorRegionRepo;
     private final BaseStatsRepo baseStatsRepo;
+    private final StatModifierRepo statModifierRepo;
 
     void inputCreature(CreatureInput creature){
         Creature newCreature = new Creature();
         List<ColorRegions> colorRegions = new ArrayList<>();
         List<BaseStats> stats = new ArrayList<>();
+        List<StatModifiers> statModifiers = new ArrayList<>();
         newCreature.setCreatureName(creature.getCreatureName());
         int [][] colorRegionsTransfer = creature.getColorRegions();
 //        Make new color regions objects as a list
@@ -49,13 +52,23 @@ public class CreatureService {
             bs.setValue(new StatsDefaults(ints[0], ints[1]));
         }
 
+        float[][] statModTransfer = creature.getStatModifiers();
+        for (float[] ints: statModTransfer){
+            StatModifiers statModifier = new StatModifiers();
+            statModifier.setCreature(newCreature);
+            statModifier.setStatAdditive(ints[0]);
+            statModifier.setStatMultiplicand(ints[1]);
+            statModifier.setStats(BaseStats.STATS.values()[(int) ints[2]]);
+            statModifiers.add(statModifier);
+        }
+
         newCreature.setColorRegions(colorRegions);
         newCreature.setBaseStats(stats);
+        newCreature.setStatModifiers(statModifiers);
         creatureRepo.save(newCreature);
         colorRegionRepo.saveAll(colorRegions);
         baseStatsRepo.saveAll(stats);
-
-
+        statModifierRepo.saveAll(statModifiers);
     }
 
     public void inputCreatureOld(Creature creature){
@@ -72,10 +85,16 @@ public class CreatureService {
             bs.setCreature(creature);
         }
 
+        List<StatModifiers> statModifiers = creature.getStatModifiers();
+        for (StatModifiers sm : statModifiers){
+            sm.setCreature(creature);
+        }
+
 
         creatureRepo.save(creature);
         colorRegionRepo.saveAll(colorRegions);
         baseStatsRepo.saveAll(baseStats);
+        statModifierRepo.saveAll(statModifiers);
     }
 
     public String createCreature(CreatureInput creature) {

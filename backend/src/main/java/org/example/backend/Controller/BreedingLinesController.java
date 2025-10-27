@@ -53,6 +53,11 @@ public class BreedingLinesController {
         return new ResponseEntity<>(computationService.lineComputation(lineId), HttpStatus.OK);
     }
 
+    @PutMapping("/{lineId}/settings/{presetId}")
+    public ResponseEntity<?> updateSettings(@PathVariable Long lineId, @PathVariable Long presetId){
+        return new ResponseEntity(breedingLinesService.updateSettings(lineId, presetId), HttpStatus.OK);
+    }
+
 
 
 

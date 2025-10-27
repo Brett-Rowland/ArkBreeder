@@ -16,9 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Creature {
 
-    enum TYPE {
-        LAND, AQUATIC, FLYER
-    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,19 +25,21 @@ public class Creature {
     @Column(length = 127)
     private String creatureName;
 
-    @Column
-    private TYPE type;
-
     @OneToMany(mappedBy = "creature")
     @JsonManagedReference("creature-line")
     private List<BreedingLine> breedingLines;
 
-    @OneToMany(mappedBy = "creature")
+    @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
     @JsonManagedReference("creature-regions")
     private List<ColorRegions> colorRegions;
 
+    @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
+    @JoinColumn(name = "creature")
+    @JsonManagedReference("creature-stat-mods")
+    private List<StatModifiers> statModifiers;
 
-    @OneToMany(mappedBy = "creature")
+
+    @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
     @JsonManagedReference("creature-base")
     private List<BaseStats> baseStats;
 }
