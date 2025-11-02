@@ -17,4 +17,8 @@ public class StatsDefaults {
 
     //    How much it gets added for each points put into it.
     private float incrementPerPoint;
+
+    private float statAdditive = 0.0f;
+
+    private float statMultiplicand = 0.0f;
 }

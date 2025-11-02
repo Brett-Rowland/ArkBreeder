@@ -48,16 +48,16 @@ public class Settings {
     private Float healthAdditive;
 
     @Column(name = "health_multiplicand")
-    private Float healthMultiplicand;
+    private Float healthAffinity;
 
     @Column (name = "food_multiplicand")
-    private Float foodMultiplicand;
+    private Float foodAffinity;
 
     @Column(name = "melee_additive")
     private Float meleeAdditive;
 
     @Column(name = "melee_multiplicand")
-    private Float meleeMultiplicand;
+    private Float meleeAffinity;
 
     @Column(name = "single_player")
     private Boolean singlePlayer;

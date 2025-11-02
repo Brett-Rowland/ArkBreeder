@@ -23,7 +23,7 @@ public class DinosaurStats {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private BaseStats.STATS stats;
+    private BaseStats.STATS statType;
 
 
     @ManyToOne
@@ -34,5 +34,5 @@ public class DinosaurStats {
 
 
     @Embedded
-    private Stats value;
+    private Stats stats;
 }

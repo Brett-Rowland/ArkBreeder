@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface BaseStatsRepo extends JpaRepository<BaseStats, Integer> {
 
-    @Query("SELECT bs from BaseStats bs where bs.creature = ?1 order by bs.stats ASC")
+    @Query("SELECT bs from BaseStats bs where bs.creature = ?1 order by bs.statType ASC")
     List<BaseStats> getBaseStatsASC(Creature creature);
 
 

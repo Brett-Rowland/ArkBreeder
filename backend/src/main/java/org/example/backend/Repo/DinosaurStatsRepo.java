@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface DinosaurStatsRepo extends JpaRepository<DinosaurStats, Integer> {
 
-    @Query("SELECT ds from DinosaurStats ds where ds.dinosaur = ?1 order by ds.stats ASC")
+    @Query("SELECT ds from DinosaurStats ds where ds.dinosaur = ?1 order by ds.statType ASC")
     List<DinosaurStats> getDinosaurStatsASC(Dinosaur dino);
 
 

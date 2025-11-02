@@ -62,9 +62,9 @@ public class DinosaurService {
         for (int[] ds: dinosaur.getStats()) {
             DinosaurStats dinosaurStats = new DinosaurStats();
             dinosaurStats.setDinosaur(newDinosaur);
-            dinosaurStats.setStats(BaseStats.STATS.values()[ds[0]]);
+            dinosaurStats.setStatType(BaseStats.STATS.values()[ds[0]]);
             Stats stats = new Stats(ds[1], ds[2]);
-            dinosaurStats.setValue(stats);
+            dinosaurStats.setStats(stats);
             dinosaurStatsList.add(dinosaurStats);
 
         }

@@ -16,8 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Creature {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long creatureId;
@@ -33,13 +31,9 @@ public class Creature {
     @JsonManagedReference("creature-regions")
     private List<ColorRegions> colorRegions;
 
-    @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
-    @JoinColumn(name = "creature")
-    @JsonManagedReference("creature-stat-mods")
-    private List<StatModifiers> statModifiers;
-
 
     @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
     @JsonManagedReference("creature-base")
     private List<BaseStats> baseStats;
+
 }

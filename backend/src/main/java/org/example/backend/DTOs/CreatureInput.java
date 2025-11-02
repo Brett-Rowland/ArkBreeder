@@ -21,11 +21,8 @@ public class CreatureInput {
     int [][] colorRegions;
 
 //    Base Stats
-//    [Base, Increment Percentage, Stat Type]
-    int[][] stats;
+//    [Base, Increment Percentage, Stat Additive, Stat Multiplicand, Stat Type]
+    float[][] stats;
 
-//  Stat
-//    [Additive %, Multiplicant %, Stat Type]
-    float[][] statModifiers;
 
 }

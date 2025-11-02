@@ -25,37 +25,43 @@ public class ComputationService {
 
     public StatsTransfer calcStats(Settings settings, BaseStats baseStats, DinosaurStats dinoStats, float tamingEffectiveness){
         StatsTransfer stat = new StatsTransfer();
-        if (baseStats.getStats() == dinoStats.getStats()) {
-            BaseStats.STATS statType = dinoStats.getStats();
-            int totalPoints = dinoStats.getValue().getStatPoints() + (dinoStats.getValue().getMutationCount());
-            float statTotal = totalPoints * (baseStats.getValue().getIncrementPerPoint());
+        if (baseStats.getStatType() == dinoStats.getStatType()) {
+            BaseStats.STATS statType = dinoStats.getStatType();
+            float finalStat = 0.0f;
+            float baseValue = baseStats.getStats().getBaseValue();
+            float incrementValue = baseStats.getStats().getIncrementPerPoint();
+            float wildPoints = dinoStats.getStats().getStatPoints();
+            float mutationPoints = dinoStats.getStats().getMutationCount();
+            float totalPoints = wildPoints + mutationPoints * 2;
 //          Switch statement to get every single one
             switch (statType) {
                 case HEALTH:
-                    statTotal *= settings.getHealthScaleFactor();
-                    break;
-                case WEIGHT:
-                    statTotal *= settings.getWeightScaleFactor();
-                    break;
-                case FOOD:
-                    statTotal *= settings.getFoodScaleFactor();
+                    finalStat = ((baseValue * (1 + totalPoints * incrementValue * settings.getHealthScaleFactor())) * (1 + baseStats.getStats().getStatMultiplicand())) + (baseStats.getStats().getStatAdditive() * settings.getHealthAdditive());
                     break;
                 case STAMINA:
-                    statTotal *= settings.getStaminaScaleFactor();
+                    finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getStaminaScaleFactor());
+                    break;
+                case FOOD:
+                    finalStat = (baseValue * (1 + totalPoints * incrementValue * settings.getFoodScaleFactor())) * (1 + tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getFoodAffinity());
+                    break;
+                case WEIGHT:
+                    finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getWeightScaleFactor());
                     break;
                 case OXYGEN:
-                    statTotal *= settings.getOxygenScaleFactor();
+                    finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getOxygenScaleFactor());
                     break;
                 case MELEE:
-                    statTotal *= settings.getMeleeScaleFactor() * tamingEffectiveness;
+                    finalStat = (baseValue * (1 + (totalPoints * incrementValue * settings.getMeleeScaleFactor())) + baseStats.getStats().getStatAdditive() * settings.getMeleeAdditive()) * (1 + (tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getMeleeAffinity()));
+                    finalStat = Math.round(finalStat*1000.0)/10.0f;
                     break;
                 default:
+//                  Crafting
+                    finalStat = baseValue * (1 + totalPoints * incrementValue);
                     break;
             }
             stat.setStatType(statType);
-            statTotal += baseStats.getValue().getBaseValue();
-            stat.setCalcTotal(statTotal);
-            stat.setTotalPoints(totalPoints);
+            stat.setTotalPoints((int) totalPoints);
+            stat.setCalcTotal(finalStat);
         }
         return stat;
     }
@@ -80,7 +86,7 @@ public class ComputationService {
 
         Settings settings;
         if (preset == null){
-            settings = new Settings(1L,0f,0f,0f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f, false, false);
+            settings = new Settings(1L,0f,0f,0f,1f,1f,1f,1f,1f,1f,.14f,.4f,.44f,.14f,.44f, false, false);
         }
         else{
             settings = preset.getSettings();

@@ -24,7 +24,7 @@ public class BaseStats {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private STATS stats;
+    private STATS statType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creatureId")
@@ -33,6 +33,6 @@ public class BaseStats {
     private Creature creature;
 
     @Embedded
-    private StatsDefaults value;
+    private StatsDefaults stats;
 
 }

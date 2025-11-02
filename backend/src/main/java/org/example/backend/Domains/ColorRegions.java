@@ -14,7 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ColorRegions {
     public enum Visibility {
-        NOT_VISIBLE,
         VISIBLE_COLOR,
         VISIBLE_DATA
     }
