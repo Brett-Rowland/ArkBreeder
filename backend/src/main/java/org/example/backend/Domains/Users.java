@@ -22,10 +22,10 @@ public class Users {
     @Column(name = "user_id")
     private long userId;
 
-    @Column(length = 31)
+    @Column(length = 31, nullable = false)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = true)

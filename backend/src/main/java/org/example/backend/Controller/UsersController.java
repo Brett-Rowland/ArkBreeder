@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
-//@CrossOrigin(origins = "") // Will need to put in the port for the front end here
+@CrossOrigin(origins = "http://localhost:5173") // Will need to put in the port for the front end here
 public class UsersController {
 
     private final UsersService usersService;
     private final BreedingLinesService breedingLinesService;
 
     //    Create an Account
-    @PostMapping("/create_account")
+    @PostMapping("/create")
     public ResponseEntity<?> createAccount(@RequestBody Users user) {
         try {
             return new ResponseEntity<>(usersService.create(user), HttpStatus.OK);
@@ -34,7 +34,7 @@ public class UsersController {
     }
 
 //    Delete the account
-    @DeleteMapping("/{token}/delete_account")
+    @DeleteMapping("/{token}/delete")
     public ResponseEntity<?> deleteAccount(@PathVariable Long token) {
         try {
             usersService.delete(token);
@@ -46,8 +46,8 @@ public class UsersController {
 
 
 //    Login
-    @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Users user) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Users user ) {
         try{
             return new ResponseEntity<>(usersService.login(user), HttpStatus.OK);
         } catch (Exception e) {
