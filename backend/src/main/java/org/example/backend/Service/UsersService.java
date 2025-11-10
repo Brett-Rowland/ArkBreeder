@@ -20,7 +20,7 @@ public class UsersService {
             throw new RuntimeException("Username already exists");
 
 //        Wanting to set the users token number so we have an easier thing to move around.
-//        Don't want to do something with the password or username since those are sensative
+//        Don't want to do something with the password or username since those are sensitive
 
         user.setToken(setToken());
 //        Saves there info into the db

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import "./Styling/login.css"
+import LoginForm from "../components/LoginForm";
 
 
 export default function Login(){
@@ -14,6 +15,7 @@ export default function Login(){
     
 
     const changeUserDetails = (e) => {
+        console.log(login);
         setLogin({...login,[e.target.name]:e.target.value})
     }
 
@@ -46,15 +48,9 @@ export default function Login(){
 
     }
 
-
-    function createAccount(){
-        navigate("/registar")
-    }
-
-
     return(<>
 
-        <div className="loginForm">
+        {/* <div className="loginForm">
         <form onSubmit={handleLogin} method="post">
             <label>Username: 
                 <input required name="username" onChange={changeUserDetails} type="text" />
@@ -67,9 +63,12 @@ export default function Login(){
             <button>Login</button>
         </form>
 
-            {/* <p><a href="">Forgot Password</a></p> */}
-            <button type="button" onClick={createAccount}>Create an Account</button>
-        </div>
+            <p><a href="">Forgot Password</a></p>
+            <a href="/registar"><button type="button">Create an Account</button></a>
+        </div> */}
+
+        <LoginForm handleLogin={handleLogin} changeUserDetails={changeUserDetails}></LoginForm>
+
     </>)
 
 }

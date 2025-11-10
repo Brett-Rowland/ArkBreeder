@@ -1,8 +1,11 @@
+import BreedingContainer from "../components/BreedingLineContainer"
+
+
 export default function BreedingLines(){
     return(
 
         <>
-        <h1>Breeding Lines</h1>
+        <BreedingContainer></BreedingContainer>
         </>
     )
 }
