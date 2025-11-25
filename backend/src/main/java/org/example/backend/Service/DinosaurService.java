@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.example.backend.DTOs.DinosaurInput;
 import org.example.backend.Domains.*;
 import org.example.backend.Repo.*;
+import org.example.backend.ValueObjects.StatPoints;
 import org.example.backend.ValueObjects.Stats;
 import org.springframework.stereotype.Service;
 
@@ -62,8 +63,8 @@ public class DinosaurService {
         for (int[] ds: dinosaur.getStats()) {
             DinosaurStats dinosaurStats = new DinosaurStats();
             dinosaurStats.setDinosaur(newDinosaur);
-            dinosaurStats.setStatType(BaseStats.STATS.values()[ds[0]]);
-            Stats stats = new Stats(ds[1], ds[2]);
+            StatPoints stats = new StatPoints(ds[1], ds[2]);
+            stats.setStatType(Stats.STATS.values()[ds[0]]);
             dinosaurStats.setStats(stats);
             dinosaurStatsList.add(dinosaurStats);
 

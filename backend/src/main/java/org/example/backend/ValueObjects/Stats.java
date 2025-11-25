@@ -1,22 +1,24 @@
 package org.example.backend.ValueObjects;
 
-
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// This is a class that is mainly to help with all of the stats work
-
-@Embeddable
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@MappedSuperclass
 public class Stats {
 
-//    Amount of points allocated to that specific stat
-    private int statPoints;
+    public enum STATS{
+        HEALTH, STAMINA, OXYGEN, FOOD, WEIGHT, MELEE, CRAFTING
+    }
 
-//    Mutation Count for that specific stat
-    private int mutationCount;
+
+    @Enumerated(value = EnumType.ORDINAL)
+    public STATS statType;
+
 }

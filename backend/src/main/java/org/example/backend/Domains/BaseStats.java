@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.example.backend.ValueObjects.Stats;
 import org.example.backend.ValueObjects.StatsDefaults;
 
 @Table(name = "base_stats")
@@ -14,17 +15,9 @@ import org.example.backend.ValueObjects.StatsDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BaseStats {
-    public enum STATS{
-        HEALTH, STAMINA, FOOD, WEIGHT, OXYGEN, MELEE, CRAFTING
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false)
-    private STATS statType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creatureId")

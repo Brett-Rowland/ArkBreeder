@@ -30,5 +30,4 @@ public class DinoColors {
     @JoinColumn(name = "dino_id")
     @JsonBackReference("dino-colors")
     private Dinosaur dinosaur;
-
 }

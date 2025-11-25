@@ -6,6 +6,8 @@ import org.example.backend.DTOs.DinosaurTransfer;
 import org.example.backend.DTOs.StatsTransfer;
 import org.example.backend.Domains.*;
 import org.example.backend.Repo.*;
+import org.example.backend.ValueObjects.BreedingSettings;
+import org.example.backend.ValueObjects.Stats;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,42 +25,54 @@ public class ComputationService {
     private final BaseStatsRepo baseStatsRepo;
     private final DinosaurStatsRepo dinosaurStatsRepo;
 
-    public StatsTransfer calcStats(Settings settings, BaseStats baseStats, DinosaurStats dinoStats, float tamingEffectiveness){
+
+    public float calculation(BreedingSettings settings, BaseStats baseStats, float totalPoints, float tamingEffectiveness, Stats.STATS statType){
+        float finalStat = 0.0f;
+        float baseValue = baseStats.getStats().getBaseValue();
+        float incrementValue = baseStats.getStats().getIncrementPerPoint();
+        switch (statType) {
+            case HEALTH:
+                finalStat = ((baseValue * (1 + totalPoints * incrementValue * settings.getHealthScaleFactor())) * (1 + baseStats.getStats().getStatMultiplicand())) + (baseStats.getStats().getStatAdditive() * settings.getHealthAdditive());
+                break;
+            case STAMINA:
+                finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getStaminaScaleFactor());
+                break;
+            case FOOD:
+                finalStat = (baseValue * (1 + totalPoints * incrementValue * settings.getFoodScaleFactor())) * (1 + tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getFoodAffinity());
+                break;
+            case WEIGHT:
+                finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getWeightScaleFactor());
+                break;
+            case OXYGEN:
+                finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getOxygenScaleFactor());
+                break;
+            case MELEE:
+                finalStat = (baseValue * (1 + (totalPoints * incrementValue * settings.getMeleeScaleFactor())) + baseStats.getStats().getStatAdditive() * settings.getMeleeAdditive()) * (1 + (tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getMeleeAffinity()));
+                finalStat = Math.round(finalStat*1000.0)/10.0f;
+                break;
+            default:
+//                  Crafting
+                finalStat = baseValue * (1 + totalPoints * incrementValue);
+
+                break;
+
+        }
+        if (statType != Stats.STATS.MELEE){
+            finalStat = Math.round(finalStat*10.0)/10.0f;
+        }
+
+        return finalStat;
+    }
+
+
+    public StatsTransfer calcStats(BreedingSettings settings, BaseStats baseStats, DinosaurStats dinoStats, float tamingEffectiveness){
         StatsTransfer stat = new StatsTransfer();
-        if (baseStats.getStatType() == dinoStats.getStatType()) {
-            BaseStats.STATS statType = dinoStats.getStatType();
-            float finalStat = 0.0f;
-            float baseValue = baseStats.getStats().getBaseValue();
-            float incrementValue = baseStats.getStats().getIncrementPerPoint();
+        if (baseStats.getStats().getStatType() == dinoStats.getStats().getStatType()) {
+            Stats.STATS statType = dinoStats.getStats().getStatType();
             float wildPoints = dinoStats.getStats().getStatPoints();
             float mutationPoints = dinoStats.getStats().getMutationCount();
-            float totalPoints = wildPoints + mutationPoints * 2;
-//          Switch statement to get every single one
-            switch (statType) {
-                case HEALTH:
-                    finalStat = ((baseValue * (1 + totalPoints * incrementValue * settings.getHealthScaleFactor())) * (1 + baseStats.getStats().getStatMultiplicand())) + (baseStats.getStats().getStatAdditive() * settings.getHealthAdditive());
-                    break;
-                case STAMINA:
-                    finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getStaminaScaleFactor());
-                    break;
-                case FOOD:
-                    finalStat = (baseValue * (1 + totalPoints * incrementValue * settings.getFoodScaleFactor())) * (1 + tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getFoodAffinity());
-                    break;
-                case WEIGHT:
-                    finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getWeightScaleFactor());
-                    break;
-                case OXYGEN:
-                    finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getOxygenScaleFactor());
-                    break;
-                case MELEE:
-                    finalStat = (baseValue * (1 + (totalPoints * incrementValue * settings.getMeleeScaleFactor())) + baseStats.getStats().getStatAdditive() * settings.getMeleeAdditive()) * (1 + (tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getMeleeAffinity()));
-                    finalStat = Math.round(finalStat*1000.0)/10.0f;
-                    break;
-                default:
-//                  Crafting
-                    finalStat = baseValue * (1 + totalPoints * incrementValue);
-                    break;
-            }
+            float totalPoints = wildPoints + (mutationPoints * 2);
+            float finalStat = calculation(settings, baseStats, totalPoints, tamingEffectiveness, statType);
             stat.setStatType(statType);
             stat.setTotalPoints((int) totalPoints);
             stat.setCalcTotal(finalStat);
@@ -67,7 +81,7 @@ public class ComputationService {
     }
 
 
-    public BreedingLineTransfer lineComputation(Long lineId){
+    public BreedingLineTransfer lineComputation(BreedingLine breedingLine){
         BreedingLineTransfer computation = new BreedingLineTransfer();
 
         return computation;
@@ -84,12 +98,12 @@ public class ComputationService {
 
         Presets preset = breedingLine.getPresets();
 
-        Settings settings;
+        BreedingSettings settings;
         if (preset == null){
-            settings = new Settings(1L,0f,0f,0f,1f,1f,1f,1f,1f,1f,.14f,.4f,.44f,.14f,.44f, false, false);
+            settings = new BreedingSettings(1f,1f,1f,1f,1f,1f,.14f,.4f,1f,.14f,.44f);
         }
         else{
-            settings = preset.getSettings();
+            settings = preset.getSettings().getBreedingSettings();
         }
         Creature creature = breedingLine.getCreature();
 

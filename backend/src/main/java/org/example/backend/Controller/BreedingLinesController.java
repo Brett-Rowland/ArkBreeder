@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/breeding-line")
+@CrossOrigin(origins = "http://localhost:5173")
 public class BreedingLinesController {
 
     private BreedingLinesService breedingLinesService;
-    private ComputationService computationService;
 
 //    Create a Breeding Line
     @PostMapping("/{token}/create/{creatureId}")
@@ -35,6 +35,18 @@ public class BreedingLinesController {
         return new ResponseEntity<>(breedingLinesService.grabLine(lineId), HttpStatus.OK);
     }
 
+//    Get List of lines
+    @GetMapping("/{token}/list/{limit}")
+    public ResponseEntity<?> breedingLineList(@PathVariable Long token, @PathVariable Integer limit){
+        System.out.println(limit);
+        try{
+            return new ResponseEntity<>(breedingLinesService.breedingPageSetup(token, limit), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 //    Get Specific Line Dinosaurs
     @GetMapping("/{lineId}/dinosaurs")
     public ResponseEntity<?> grabDinos(@PathVariable Long lineId) {
@@ -50,7 +62,7 @@ public class BreedingLinesController {
 
     @GetMapping("/{lineId}/computed")
     public ResponseEntity<?> getLineComputed(@PathVariable Long lineId){
-        return new ResponseEntity<>(computationService.lineComputation(lineId), HttpStatus.OK);
+        return new ResponseEntity<>(breedingLinesService.lineComputation(lineId), HttpStatus.OK);
     }
 
     @PutMapping("/{lineId}/settings/{presetId}")

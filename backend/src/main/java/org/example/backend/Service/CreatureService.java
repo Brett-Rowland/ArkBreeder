@@ -9,6 +9,7 @@ import org.example.backend.Domains.Creature;
 import org.example.backend.Repo.BaseStatsRepo;
 import org.example.backend.Repo.ColorRegionRepo;
 import org.example.backend.Repo.CreatureRepo;
+import org.example.backend.ValueObjects.Stats;
 import org.example.backend.ValueObjects.StatsDefaults;
 import org.springframework.stereotype.Service;
 
@@ -39,16 +40,16 @@ public class CreatureService {
             cr.setVisibility(ColorRegions.Visibility.values()[colorRegionsTransfer[i][1]]);
             colorRegions.add(cr);
         }
+
 //        Make new base stats as a list
         float [][] statsTransfer = creature.getStats();
         for (float[] floats : statsTransfer) {
             BaseStats bs = new BaseStats();
             bs.setCreature(newCreature);
-            bs.setStatType(BaseStats.STATS.values()[(int)floats[4]]);
             bs.setStats(new StatsDefaults(floats[0], floats[1], floats[2], floats[3]));
+            bs.getStats().setStatType(Stats.STATS.values()[(int)floats[4]]);
             stats.add(bs);
         }
-
 
         newCreature.setColorRegions(colorRegions);
         newCreature.setBaseStats(stats);

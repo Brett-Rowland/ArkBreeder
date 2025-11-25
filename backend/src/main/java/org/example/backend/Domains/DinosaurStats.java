@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.example.backend.ValueObjects.StatPoints;
 import org.example.backend.ValueObjects.Stats;
 
 @Table(name = "dinosaur_stats")
@@ -20,12 +21,6 @@ public class DinosaurStats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false)
-    private BaseStats.STATS statType;
-
-
     @ManyToOne
     @JoinColumn(name = "dinoId")
     @JsonBackReference
@@ -34,5 +29,5 @@ public class DinosaurStats {
 
 
     @Embedded
-    private Stats stats;
+    private StatPoints stats;
 }

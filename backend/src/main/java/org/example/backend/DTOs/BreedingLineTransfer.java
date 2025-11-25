@@ -14,6 +14,7 @@ public class BreedingLineTransfer {
 
     private String creatureName;
     private long breedingLineId;
+    private List<ColorRegionTransfer> colorRegions;
     private List<StatsTransfer> maxStats;
     private List<DinosaurTransfer> dinosaurCalc;
     private String breedingLineNickname;
