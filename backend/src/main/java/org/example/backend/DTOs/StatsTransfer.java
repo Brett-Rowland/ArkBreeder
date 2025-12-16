@@ -18,4 +18,8 @@ public class StatsTransfer {
         this.statType = statType;
         this.totalPoints = totalPoints;
     }
+
+    public StatsTransfer(Stats.STATS statType){
+        this.statType = statType;
+    }
 }

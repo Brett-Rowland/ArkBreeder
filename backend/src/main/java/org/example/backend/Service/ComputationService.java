@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.backend.DTOs.BreedingLineTransfer;
 import org.example.backend.DTOs.DinosaurTransfer;
 import org.example.backend.DTOs.StatsTransfer;
+import org.example.backend.DTOs.ValidationInput;
 import org.example.backend.Domains.*;
 import org.example.backend.Repo.*;
 import org.example.backend.ValueObjects.BreedingSettings;
@@ -35,7 +36,12 @@ public class ComputationService {
                 finalStat = ((baseValue * (1 + totalPoints * incrementValue * settings.getHealthScaleFactor())) * (1 + baseStats.getStats().getStatMultiplicand())) + (baseStats.getStats().getStatAdditive() * settings.getHealthAdditive());
                 break;
             case STAMINA:
+            case CHARGE_CAPACITY:
                 finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getStaminaScaleFactor());
+                break;
+            case OXYGEN:
+            case CHARGE_REGENERATION:
+                finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getOxygenScaleFactor());
                 break;
             case FOOD:
                 finalStat = (baseValue * (1 + totalPoints * incrementValue * settings.getFoodScaleFactor())) * (1 + tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getFoodAffinity());
@@ -43,10 +49,8 @@ public class ComputationService {
             case WEIGHT:
                 finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getWeightScaleFactor());
                 break;
-            case OXYGEN:
-                finalStat = baseValue * (1 + totalPoints * incrementValue * settings.getOxygenScaleFactor());
-                break;
             case MELEE:
+            case CHARGE_EMISSION_RANGE:
                 finalStat = (baseValue * (1 + (totalPoints * incrementValue * settings.getMeleeScaleFactor())) + baseStats.getStats().getStatAdditive() * settings.getMeleeAdditive()) * (1 + (tamingEffectiveness * baseStats.getStats().getStatMultiplicand() * settings.getMeleeAffinity()));
                 finalStat = Math.round(finalStat*1000.0)/10.0f;
                 break;
@@ -123,5 +127,21 @@ public class ComputationService {
         dinosaurTransfer.setDinoId(dinosaur.getDinoId());
         dinosaurTransfer.setDinosaurNickname(dinosaur.getDinosaurNickname());
         return dinosaurTransfer;
+    }
+
+    public List<StatsTransfer> validation(ValidationInput validationInput){
+//        Need to get my Base Stats first
+        List<BaseStats> baseStats = baseStatsRepo.getBaseStatsASCById(validationInput.getCreatureId());
+        System.out.println(validationInput.getStats());
+        List<StatsTransfer> statsTransfers = validationInput.getStats();
+        if (baseStats.size() == statsTransfers.size()) {
+            for (int i = 0; i < baseStats.size(); i++) {
+                StatsTransfer statsTransfer = statsTransfers.get(i);
+                if (statsTransfer.getStatType() == baseStats.get(i).getStats().getStatType()) {
+                    statsTransfer.setCalcTotal(calculation(validationInput.getBreedingSettings(), baseStats.get(i), statsTransfer.getTotalPoints(), validationInput.getTamingEffectiveness(), statsTransfer.getStatType()));
+                }
+            }
+        }
+        return  statsTransfers;
     }
 }

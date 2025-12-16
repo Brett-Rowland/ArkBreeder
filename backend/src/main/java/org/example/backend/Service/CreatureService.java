@@ -3,6 +3,8 @@ package org.example.backend.Service;
 import lombok.AllArgsConstructor;
 
 import org.example.backend.DTOs.CreatureInput;
+import org.example.backend.DTOs.CreatureTransfer;
+import org.example.backend.DTOs.StatsTransfer;
 import org.example.backend.Domains.BaseStats;
 import org.example.backend.Domains.ColorRegions;
 import org.example.backend.Domains.Creature;
@@ -104,5 +106,24 @@ public class CreatureService {
             inputCreatureOld(creature);
         }
         return "Created Creatures Succesfully";
+    }
+
+    public List<CreatureTransfer> getCreatureValidation() {
+        return creatureRepo.getCreatureValidation();
+    }
+
+    public void updateValidation(long creatureId) throws Exception {
+        try{
+            Creature creature = creatureRepo.getCreatureByCreatureId(creatureId);
+            creature.setValidated(true);
+            creatureRepo.save(creature);
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public List<StatsTransfer> getCreatureStatTypes(long creatureId) {
+        return baseStatsRepo.getStatTypeASCByID(creatureId);
     }
 }

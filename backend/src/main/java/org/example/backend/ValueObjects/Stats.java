@@ -14,10 +14,21 @@ import lombok.NoArgsConstructor;
 public class Stats {
 
     public enum STATS{
-        HEALTH, STAMINA, OXYGEN, FOOD, WEIGHT, MELEE, CRAFTING
+        HEALTH, // 0
+        STAMINA, // 1
+        CHARGE_CAPACITY, // 2
+
+        OXYGEN, // 3
+        CHARGE_REGENERATION, // 4
+
+        FOOD, // 5
+        WEIGHT, // 6
+
+        MELEE , // 7
+        CHARGE_EMISSION_RANGE, // 8
+
+        CRAFTING, // 9
     }
-
-
     @Enumerated(value = EnumType.ORDINAL)
     public STATS statType;
 

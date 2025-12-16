@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Table (name = "creature_base")
@@ -35,5 +36,12 @@ public class Creature {
     @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
     @JsonManagedReference("creature-base")
     private List<BaseStats> baseStats;
+
+    @Column()
+    private Date last_updated =  new Date();
+
+
+    @Column()
+    private boolean validated = false;
 
 }

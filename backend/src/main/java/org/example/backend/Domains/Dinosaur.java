@@ -54,4 +54,6 @@ public class Dinosaur {
     @Column(name = "taming_effect")
     private float tamingEffectiveness;
 
+    private boolean deleted = false;
+
 }

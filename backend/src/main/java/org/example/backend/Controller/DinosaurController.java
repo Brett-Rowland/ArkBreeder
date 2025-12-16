@@ -3,6 +3,7 @@ package org.example.backend.Controller;
 
 import lombok.AllArgsConstructor;
 import org.example.backend.DTOs.DinosaurInput;
+import org.example.backend.DTOs.ValidationInput;
 import org.example.backend.Domains.Dinosaur;
 import org.example.backend.Service.ComputationService;
 import org.example.backend.Service.DinosaurService;
@@ -67,7 +68,5 @@ public class DinosaurController {
     public ResponseEntity<?> getDinoCompute(@PathVariable Long dinoId){
         return new ResponseEntity<>(computationService.dinoComputation(dinoId), HttpStatus.OK);
     }
-
-
 
 }

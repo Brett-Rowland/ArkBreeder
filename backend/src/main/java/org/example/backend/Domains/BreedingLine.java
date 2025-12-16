@@ -51,6 +51,8 @@ public class BreedingLine {
     private Presets presets;
 
 
+    private boolean deleted = false;
+
     @Override
     public String toString(){
         return "Breeding Line: " + this.breedingLineId + " Line Name: " + this.lineName;
