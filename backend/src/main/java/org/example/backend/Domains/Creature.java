@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import java.util.Date;
 import java.util.List;
@@ -33,8 +34,9 @@ public class Creature {
     private List<ColorRegions> colorRegions;
 
 
-    @OneToMany(mappedBy = "creature", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creature")
     @JsonManagedReference("creature-base")
+    @OrderBy("stats.statType ASC")
     private List<BaseStats> baseStats;
 
     @Column()

@@ -17,6 +17,11 @@ public class CreatureTransfer {
     private Long colorRegionTotal;
 
 
+    CreatureTransfer (long creatureId, String creatureName){
+        this.creatureId = creatureId;
+        this.creatureName = creatureName;
+    }
+
     CreatureTransfer(long creatureId, String creatureName, Long colorRegionTotal) {
         this.creatureId = creatureId;
         this.creatureName = creatureName;

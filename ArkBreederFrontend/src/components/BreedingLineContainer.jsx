@@ -35,9 +35,9 @@ export default function BreedingContainer({breedingLine}){
                     </div>
 
                     {/* Color Region Box */}
-                    <div className="rounded-lg border border-gray-200 p-1 bg-white">
+                    {/* <div className="rounded-lg border border-gray-200 p-1 bg-white"> */}
                       {/* Color Region Row Generator */}
-                        <div className="grid grid-cols-2 gap-2">
+                        {/* <div className="grid grid-cols-2 gap-2">
                         
                         {colorRegions.map((index) => {
                           if (breedingLine?.colorRegions[colorRegionNumber]?.colorRegion === index){
@@ -57,8 +57,8 @@ export default function BreedingContainer({breedingLine}){
                           })
                         }
                           
-                        </div>
-                    </div>
+                        </div> */}
+                    {/* </div> */}
                 </div>
 
 

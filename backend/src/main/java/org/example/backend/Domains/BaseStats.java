@@ -19,7 +19,7 @@ public class BaseStats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "creatureId")
     @JsonBackReference("creature-base")
     @ToString.Exclude

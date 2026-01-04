@@ -65,7 +65,7 @@ export default function DinoValidation() {
     //   Grabs Creatures for the Dropdown menu
     useEffect(() => {
       if (dinoList.length == 0){
-          fetch("http://localhost:8787/creatures/validation-list",{
+          fetch("http://localhost:8787/creatures/unvalidated_list",{
               method:"GET"
           }).then((res) => {
               if (res.status === 200){

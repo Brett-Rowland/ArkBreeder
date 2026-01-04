@@ -60,26 +60,6 @@ public class CreatureService {
         baseStatsRepo.saveAll(stats);
     }
 
-    public void inputCreatureOld(Creature creature){
-
-//        Grab the stats and color regions
-        List<ColorRegions> colorRegions = creature.getColorRegions();
-
-        for (ColorRegions cr : colorRegions){
-            cr.setCreature(creature);
-        }
-
-        List<BaseStats> baseStats = creature.getBaseStats();
-        for (BaseStats bs : baseStats){
-            bs.setCreature(creature);
-        }
-
-
-        creatureRepo.save(creature);
-        colorRegionRepo.saveAll(colorRegions);
-        baseStatsRepo.saveAll(baseStats);
-    }
-
     public String createCreature(CreatureInput creature) {
         inputCreature(creature);
         return "Created Creature Successfully";
@@ -101,15 +81,8 @@ public class CreatureService {
         return "Created Creatures Successfully";
     }
 
-    public String createCreatureListOld(List<Creature> creatures){
-        for (Creature creature : creatures){
-            inputCreatureOld(creature);
-        }
-        return "Created Creatures Succesfully";
-    }
-
-    public List<CreatureTransfer> getCreatureValidation() {
-        return creatureRepo.getCreatureValidation();
+    public List<CreatureTransfer> getUnvalidatedCreatures() {
+        return creatureRepo.getUnvalidatedCreatures();
     }
 
     public void updateValidation(long creatureId) throws Exception {

@@ -1,6 +1,7 @@
 package org.example.backend.Controller;
 
 import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.BreedingLineTransfer;
 import org.example.backend.Domains.BreedingLine;
 import org.example.backend.Service.BreedingLinesService;
 import org.example.backend.Service.ComputationService;
@@ -17,10 +18,13 @@ public class BreedingLinesController {
     private BreedingLinesService breedingLinesService;
 
 //    Create a Breeding Line
-    @PostMapping("/{token}/create/{creatureId}")
-    public ResponseEntity<?> createLine(@PathVariable Long token, @PathVariable Long creatureId ,@RequestBody BreedingLine breedingLine) {
-        breedingLinesService.createLine(breedingLine, token, creatureId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/{token}/create/{creatureId}/{serverId}")
+    public ResponseEntity<?> createLine(@PathVariable Long token, @PathVariable Long creatureId ,@RequestBody String lineNickname, @PathVariable Long serverId) {
+        try {
+            return new ResponseEntity<>(breedingLinesService.createLine(lineNickname, token, creatureId, serverId) ,HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>("Line Not Created",HttpStatus.BAD_REQUEST);
+        }
     }
 
 //    Rename a Breeding Line
@@ -65,13 +69,9 @@ public class BreedingLinesController {
         return new ResponseEntity<>(breedingLinesService.lineComputation(lineId), HttpStatus.OK);
     }
 
-    @PutMapping("/{lineId}/settings/{presetId}")
-    public ResponseEntity<?> updateSettings(@PathVariable Long lineId, @PathVariable Long presetId){
-        return new ResponseEntity(breedingLinesService.updateSettings(lineId, presetId), HttpStatus.OK);
+    @PutMapping("/{lineId}/settings/{serverId}")
+    public ResponseEntity<?> updateSettings(@PathVariable Long lineId, @PathVariable Long serverId){
+        return new ResponseEntity(breedingLinesService.updateSettings(lineId, serverId), HttpStatus.OK);
     }
-
-
-
-
 
 }

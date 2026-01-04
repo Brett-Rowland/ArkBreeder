@@ -1,7 +1,9 @@
 package org.example.backend.Service;
 
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.BreedingLinePageDTO;
 import org.example.backend.DTOs.BreedingLineTransfer;
 import org.example.backend.DTOs.StatsTransfer;
 import org.example.backend.Domains.*;
@@ -21,20 +23,43 @@ public class BreedingLinesService {
     private final DinosaurRepo dinosaurRepo;
     private final UsersRepo usersRepo;
     private final CreatureRepo creatureRepo;
-    private final PresetsRepo presetsRepo;
+    private final ServersRepo serversRepo;
     private final ComputationService computationService;
     private final BaseStatsRepo baseStatsRepo;
+    private final SettingsRepo settingsRepo;
 
     public List<Dinosaur> grabDinosaurs(Long lineId) {
 //        return dinosaurRepo.findByBreedingLine_BreedingLineId(lineId);
         return null;
     }
 
-
-    public void createLine(BreedingLine breedingLine, Long token, Long creatureId) {
+    @Transactional
+    public BreedingLineTransfer createLine(String lineNickname, Long token, Long creatureId, Long serverId) {
+//      Saving of everything
+        BreedingLine breedingLine = new BreedingLine();
+        breedingLine.setLineName(lineNickname);
         breedingLine.setUser(usersRepo.getUsersByToken(token));
         breedingLine.setCreature(creatureRepo.getCreatureByCreatureId(creatureId));
+        breedingLine.setServer(serversRepo.getServersByServerId(serverId));
         breedingLinesRepo.save(breedingLine);
+
+//        Making the return object
+        BreedingLineTransfer breedingLineTransfer = new BreedingLineTransfer();
+        breedingLineTransfer.setBreedingLineId(breedingLine.getBreedingLineId());
+        breedingLineTransfer.setBreedingLineNickname(lineNickname);
+        breedingLineTransfer.setCreatureName(breedingLine.getCreature().getCreatureName());
+
+        List<StatsTransfer> statsList = new ArrayList<>();
+
+        for (BaseStats bs: breedingLine.getCreature().getBaseStats()){
+            StatsTransfer statsTransfer = new StatsTransfer();
+            statsTransfer.setStatType(bs.getStats().getStatType());
+            statsTransfer.setCalcTotal(0);
+            statsTransfer.setTotalPoints(0);
+            statsList.add(statsTransfer);
+        }
+        breedingLineTransfer.setMaxStats(statsList);
+        return breedingLineTransfer;
     }
 
     public void renameLine(Long lineId, String newName) {
@@ -43,12 +68,8 @@ public class BreedingLinesService {
         breedingLinesRepo.save(breedingLine);
     }
 
-    public List<BreedingLine> grabLines(Long token) {
-        Users user = usersRepo.getUsersByToken(token);
-        return breedingLinesRepo.getBreedingLinesByUsersId(user.getUserId());
-    }
-
-    public List<BreedingLineTransfer> breedingPageSetup(Long token, Integer limit){
+    public BreedingLinePageDTO breedingPageSetup(Long token, Integer limit){
+        BreedingLinePageDTO pageSetup = new BreedingLinePageDTO();
         List<BreedingLineTransfer> transferList = new ArrayList<>();
 
 //        Grab the Breeding Lines
@@ -60,11 +81,11 @@ public class BreedingLinesService {
 //            Settings, Base Stats
             List<BaseStats> baseStats = baseStatsRepo.getBaseStatsASC(bl.getCreature());
             BreedingSettings breedingSettings;
-            if (bl.getPresets() == null){
+            if (bl.getServer() == null){
                 breedingSettings = new BreedingSettings(1f,1f,1f,1f,1f,1f,.14f,.4f,1f,.14f,.44f);
             }
             else{
-                breedingSettings = bl.getPresets().getSettings().getBreedingSettings();
+                breedingSettings = bl.getServer().getSettings().getBreedingSettings();
             }
 
 //            Calculation on the stats
@@ -81,7 +102,17 @@ public class BreedingLinesService {
             transferList.add(newBreedingLine);
         }
 
-        return transferList;
+
+//        Grab the creatures
+        pageSetup.setCreatureList(creatureRepo.getCreatures());
+
+//        Grab the settings listed
+        pageSetup.setSettingsList(serversRepo.getServersByToken(token));
+
+        pageSetup.setBreedingLines(transferList);
+
+
+        return pageSetup;
     }
     public BreedingLine grabLine(Long lineId) {
         return breedingLinesRepo.getBreedingLineByBreedingLineId(lineId);
@@ -91,10 +122,10 @@ public class BreedingLinesService {
         breedingLinesRepo.deleteById(lineId);
     }
 
-    public String updateSettings(Long lineId, Long presetId){
+    public String updateSettings(Long lineId, Long serverID){
         BreedingLine breedingLine = breedingLinesRepo.getBreedingLineByBreedingLineId(lineId);
-        Presets presets = presetsRepo.getPresetsByPresetID(presetId);
-        breedingLine.setPresets(presets);
+        Servers server = serversRepo.getServersByServerId(serverID);
+        breedingLine.setServer(server);
         breedingLinesRepo.save(breedingLine);
         return "Settings have been updated";
     }

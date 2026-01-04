@@ -29,7 +29,6 @@ public class CreatureController {
 
     @GetMapping("/current-species")
     public ResponseEntity<?> getCurrentSpecies(@RequestBody String creatureName) {
-        System.out.println(creatureName);
         return new ResponseEntity<>(creatureService.getCreature(creatureName), HttpStatus.OK);
     }
 
@@ -44,34 +43,35 @@ public class CreatureController {
         return new ResponseEntity<>(creatureService.createCreatureList(creatures), HttpStatus.OK);
     }
 
-    @PostMapping("/species-list-old")
-    public ResponseEntity<?> oldCreatureList(@RequestBody List<Creature> creatures){
-        return new ResponseEntity<>(creatureService.createCreatureListOld(creatures), HttpStatus.OK);
+
+//    This is the function that is getting all unvalidated Creatures
+//    This is used for the
+    @GetMapping("/unvalidated_list")
+    public ResponseEntity<?> unvalidatedCreatures() {
+        return new ResponseEntity<>(creatureService.getUnvalidatedCreatures(), HttpStatus.OK);
     }
 
-    @GetMapping("/validation-list")
-    public ResponseEntity<?> getValidationList() {
-        return new ResponseEntity<>(creatureService.getCreatureValidation(), HttpStatus.OK);
-    }
-
+//    This is the Function that is turning the switch on saying that it is validated then grabbing the list again
+//    For my personal use
     @PutMapping("/validate/{creatureID}")
-    public ResponseEntity<?> validateCreature(@PathVariable("creatureID") long creatureID) {
+    public ResponseEntity<?> updateValidation(@PathVariable("creatureID") long creatureID) {
         try{
             creatureService.updateValidation(creatureID);
-            return new ResponseEntity<>(creatureService.getCreatureValidation(),HttpStatus.OK);
+            return new ResponseEntity<>(creatureService.getUnvalidatedCreatures(),HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+//  This is the command that is switching all of the stat types within the validation process
     @GetMapping("/validation/{creatureID}")
     public ResponseEntity<?> getCreatureValidation(@PathVariable("creatureID") long creatureID) {
         return new ResponseEntity<>(creatureService.getCreatureStatTypes(creatureID), HttpStatus.OK);
     }
 
-
+//  Calculates the points added in automatically so I dont have to do it manually
     @PostMapping("/validation/cal")
-    public ResponseEntity<?> getValidationCalc(@RequestBody ValidationInput validationInput) {
+    public ResponseEntity<?> getValidationCalculation(@RequestBody ValidationInput validationInput) {
         System.out.println(validationInput.getCreatureId());
         return new ResponseEntity<>(computationService.validation(validationInput), HttpStatus.OK);
     }
