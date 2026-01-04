@@ -21,7 +21,8 @@ public class Dinosaur {
 
     public enum Gender {
         MALE,
-        FEMALE
+        FEMALE,
+        MAEWING
     }
 
     @Id
@@ -29,7 +30,7 @@ public class Dinosaur {
     @Column(name = "dino_id")
     private Long dinoId;
 
-    @Column (length = 127)
+    @Column (length = 127, name = "dinosaur_nickname")
     private String dinosaurNickname;
 
     @Column (length = 127)
@@ -47,9 +48,6 @@ public class Dinosaur {
     @OneToMany(mappedBy = "dinosaur", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<DinosaurStats> dinosaurStats;
-
-    @Column()
-    private boolean tamed = true;
 
     @Column(name = "taming_effect")
     private float tamingEffectiveness;

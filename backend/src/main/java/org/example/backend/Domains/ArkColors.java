@@ -18,6 +18,7 @@ import java.util.List;
 public class ArkColors {
 
     @Id
+    @Column(name = "color_id")
     private long colorId;
 
 

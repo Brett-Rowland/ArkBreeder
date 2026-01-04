@@ -16,9 +16,10 @@ public class DinoColors {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dino_color_id")
     private Long dinoColorID;
 
-    @Column
+    @Column(name = "color_region")
     private int colorRegion;
 
     @ManyToOne
