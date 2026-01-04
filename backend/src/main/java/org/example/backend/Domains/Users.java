@@ -43,7 +43,7 @@ public class Users {
 
     @OneToMany(mappedBy="user")
     @JsonManagedReference
-    private List<Presets> presets;
+    private List<Servers> servers;
 
 
 

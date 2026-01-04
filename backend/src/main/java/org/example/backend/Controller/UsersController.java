@@ -4,7 +4,6 @@ package org.example.backend.Controller;
 import lombok.AllArgsConstructor;
 import org.example.backend.Domains.Users;
 import org.example.backend.Service.BreedingLinesService;
-import org.example.backend.Service.PresetsService;
 import org.example.backend.Service.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,15 +53,6 @@ public class UsersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-//    Get All breeding lines
-    @GetMapping("/{token}/breeding-lines")
-    public ResponseEntity<?> getBreedingLines(@PathVariable Long token) {
-        return new ResponseEntity<>(breedingLinesService.grabLines(token), HttpStatus.OK);
-    }
-
-//    Make a users grab that gets a list of all users that have made an account for you
 
 
 

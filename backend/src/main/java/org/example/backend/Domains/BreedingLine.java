@@ -46,9 +46,8 @@ public class BreedingLine {
     @JsonBackReference("creature-line")
     private Creature creature;
 
-    @OneToOne
-    @JoinColumn(name = "preset_id")
-    private Presets presets;
+    @ManyToOne
+    private Servers server;
 
 
     private boolean deleted = false;

@@ -21,7 +21,7 @@ public class ComputationService {
     private final BreedingLinesRepo breedingLinesRepo;
     private final DinosaurRepo dinosaurRepo;
     private final SettingsRepo settingsRepo;
-    private final PresetsRepo presetsRepo;
+    private final ServersRepo serversRepo;
     private final CreatureRepo creatureRepo;
     private final BaseStatsRepo baseStatsRepo;
     private final DinosaurStatsRepo dinosaurStatsRepo;
@@ -100,14 +100,14 @@ public class ComputationService {
 
         BreedingLine breedingLine = dinosaur.getBreedingLineId();
 
-        Presets preset = breedingLine.getPresets();
+        Servers server = breedingLine.getServer();
 
         BreedingSettings settings;
-        if (preset == null){
+        if (server == null){
             settings = new BreedingSettings(1f,1f,1f,1f,1f,1f,.14f,.4f,1f,.14f,.44f);
         }
         else{
-            settings = preset.getSettings().getBreedingSettings();
+            settings = server.getSettings().getBreedingSettings();
         }
         Creature creature = breedingLine.getCreature();
 

@@ -18,6 +18,9 @@ public class Settings {
     @Column(name = "settings_id")
     private Long settingsId;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Servers server;
+
     @Column(name = "maturing_rate")
     private Float maturingRate;
 
