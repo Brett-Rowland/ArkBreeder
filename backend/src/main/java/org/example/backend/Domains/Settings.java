@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backend.ValueObjects.BreedingSettings;
 
 @Entity
 @Table(name = "settings")
@@ -17,6 +18,9 @@ public class Settings {
     @Column(name = "settings_id")
     private Long settingsId;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Servers server;
+
     @Column(name = "maturing_rate")
     private Float maturingRate;
 
@@ -26,27 +30,12 @@ public class Settings {
     @Column(name = "taming_rate")
     private Float tamingRate;
 
-    @Column(name = "health_scale_factor")
-    private Float healthScaleFactor;
-
-    @Column(name = "stamina_scale_factor")
-    private Float staminaScaleFactor;
-
-    @Column(name = "oxygen_scale_factor")
-    private Float oxygenScaleFactor;
-
-    @Column(name = "food_scale_factor")
-    private Float foodScaleFactor;
-
-    @Column(name = "weight_scale_factor")
-    private Float weightScaleFactor;
-
-    @Column(name = "melee_scale_factor")
-    private Float meleeScaleFactor;
-
     @Column(name = "single_player")
     private Boolean singlePlayer;
 
     @Column(name = "event")
     private Boolean event;
+
+    @Column(nullable = false)
+    private BreedingSettings breedingSettings;
 }

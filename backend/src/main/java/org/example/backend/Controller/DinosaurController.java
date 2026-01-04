@@ -2,7 +2,10 @@ package org.example.backend.Controller;
 
 
 import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.DinosaurInput;
+import org.example.backend.DTOs.ValidationInput;
 import org.example.backend.Domains.Dinosaur;
+import org.example.backend.Service.ComputationService;
 import org.example.backend.Service.DinosaurService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +19,18 @@ public class DinosaurController {
 
 
     private DinosaurService dinosaurService;
+    private ComputationService computationService;
 
 
 //    Create a Dinosaur
     @PostMapping("/{lineId}/create")
-    public ResponseEntity<?> createDinosaur(@PathVariable Long lineId, @RequestBody Dinosaur dinosaur) {
-        dinosaurService.createDinosaur(dinosaur, lineId);
-        return  ResponseEntity.ok().build();
+    public ResponseEntity<?> createDinosaur(@PathVariable Long lineId, @RequestBody DinosaurInput dinosaur) throws Exception {
+        try {
+            dinosaurService.createDinosaur(dinosaur, lineId);
+            return  ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
@@ -56,5 +64,9 @@ public class DinosaurController {
     }
 
 
+    @GetMapping("/{dinoId}/compute")
+    public ResponseEntity<?> getDinoCompute(@PathVariable Long dinoId){
+        return new ResponseEntity<>(computationService.dinoComputation(dinoId), HttpStatus.OK);
+    }
 
 }

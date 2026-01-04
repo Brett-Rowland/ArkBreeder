@@ -4,6 +4,7 @@ package org.example.backend.Repo;
 import org.example.backend.Domains.ColorRegions;
 import org.example.backend.Domains.Creature;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface ColorRegionRepo extends JpaRepository<ColorRegions, Integer> {
     void deleteColorRegionsByDCRId(Long DCRId);
 
     List<ColorRegions> getColorRegionsByCreature(Creature creature);
+
+
+    @Query("Select dcr.colorRegion FROM ColorRegions dcr where dcr.creature = ?1 ORDER BY dcr.colorRegion")
+    int[] getColorRegionsByCreatureSort(Creature creature);
 }

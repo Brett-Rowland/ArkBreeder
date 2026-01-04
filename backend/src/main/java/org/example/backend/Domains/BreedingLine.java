@@ -1,6 +1,7 @@
 package org.example.backend.Domains;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,13 +37,25 @@ public class BreedingLine {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
+    @JsonManagedReference("dino-line")
     private List<Dinosaur> dinosaurs;
 
 
     @ManyToOne
     @JoinColumn(name = "species_id")
+    @JsonBackReference("creature-line")
     private Creature creature;
 
+    @ManyToOne
+    private Servers server;
+
+
+    private boolean deleted = false;
+
+    @Override
+    public String toString(){
+        return "Breeding Line: " + this.breedingLineId + " Line Name: " + this.lineName;
+    }
 
 
 }

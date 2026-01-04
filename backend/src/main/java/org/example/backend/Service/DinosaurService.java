@@ -1,35 +1,86 @@
 package org.example.backend.Service;
 
 
-import org.example.backend.Domains.BreedingLine;
-import org.example.backend.Domains.Dinosaur;
-import org.example.backend.Repo.BreedingLinesRepo;
-import org.example.backend.Repo.DinosaurRepo;
+import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.DinosaurInput;
+import org.example.backend.Domains.*;
+import org.example.backend.Repo.*;
+import org.example.backend.ValueObjects.StatPoints;
+import org.example.backend.ValueObjects.Stats;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
+@AllArgsConstructor
 public class DinosaurService {
 
     BreedingLinesRepo breedingLinesRepo;
     DinosaurRepo dinosaurRepo;
+    DinoColorsRepo dinoColorsRepo;
+    DinosaurStatsRepo dinosaurStatsRepo;
+    ColorRegionRepo colorRegionsRepo;
+    ArkColorsRepo arkColorsRepo;
 
 
-    public void createDinosaur(Dinosaur dinosaur, Long lineId){
+    public void createDinosaur(DinosaurInput dinosaur, Long lineId) throws Exception {
+        Dinosaur newDinosaur = new Dinosaur();
+        newDinosaur.setDinosaurNickname(dinosaur.getNickname());
         BreedingLine breedingLine = breedingLinesRepo.getBreedingLineByBreedingLineId(lineId);
-        dinosaur.setBreedingLineId(breedingLine);
-        dinosaurRepo.save(dinosaur);
+        newDinosaur.setBreedingLineId(breedingLine);
+        int[] colorRegions = colorRegionsRepo.getColorRegionsByCreatureSort(breedingLine.getCreature());
+        int [][] dinosaurColors = dinosaur.getColors();
+
+        if (colorRegions.length != dinosaurColors.length){
+            throw new Exception("Incorrect Color Region Amount");
+        }
+
+        Set<Long> arkColor = Arrays.stream(dinosaurColors).map(row -> (long) row[1]).collect(Collectors.toSet());
+
+        List<ArkColors> arkColors = arkColorsRepo.getArkColorsByColorIds(arkColor);
+
+        Map<Long, ArkColors> arkColorsMap = arkColors.stream().collect(Collectors.toMap(ArkColors::getColorId, color -> color));
+
+        List<DinoColors> dinoColorsList = new  ArrayList<>();
+        List<DinosaurStats> dinosaurStatsList = new  ArrayList<>();
+
+        for (int i = 0; i < dinosaurColors.length; i++){
+            DinoColors dinoColors = new DinoColors();
+            dinoColors.setDinosaur(newDinosaur);
+            if (colorRegions[i] != dinosaurColors[i][0]){
+                throw new Exception("Incorrect Color Region");
+            }
+            dinoColors.setColorRegion(dinosaurColors[i][0]);
+            dinoColors.setArkColor(arkColorsMap.get((long) dinosaurColors[i][1]));
+
+            if (dinoColors.getArkColor() == null)
+                throw new Exception("No Color Matching");
+            dinoColorsList.add(dinoColors);
+        }
+
+
+        for (int[] ds: dinosaur.getStats()) {
+            DinosaurStats dinosaurStats = new DinosaurStats();
+            dinosaurStats.setDinosaur(newDinosaur);
+            StatPoints stats = new StatPoints(ds[1], ds[2]);
+            stats.setStatType(Stats.STATS.values()[ds[0]]);
+            dinosaurStats.setStats(stats);
+            dinosaurStatsList.add(dinosaurStats);
+
+        }
+        dinosaurRepo.save(newDinosaur);
+        dinosaurStatsRepo.saveAll(dinosaurStatsList);
+        dinoColorsRepo.saveAll(dinoColorsList);
     }
 
     public void updateDinosaur(Dinosaur dinosaur, Long dinoId){
         Dinosaur dino = dinosaurRepo.getDinosaurByDinoId(dinoId);
-        dino.setDinosaur_nickname(dinosaur.getDinosaur_nickname());
+        dino.setDinosaurNickname(dinosaur.getDinosaurNickname());
         dino.setDinoColors(dinosaur.getDinoColors());
-        dino.setHealth(dinosaur.getHealth());
-        dino.setStamina(dinosaur.getStamina());
-        dino.setOxygen(dinosaur.getOxygen());
-        dino.setWeight(dinosaur.getWeight());
-        dino.setFood(dinosaur.getFood());
-        dino.setMelee(dinosaur.getMelee());
+        dinoColorsRepo.deleteAll(dinosaur.getDinoColors());
+        dino.setDinosaurStats(dinosaur.getDinosaurStats());
+        dinosaurStatsRepo.deleteAll(dinosaur.getDinosaurStats());
         dinosaurRepo.save(dinosaur);
 
     }
@@ -40,7 +91,7 @@ public class DinosaurService {
 
     public void renameDinosaur(Long dinoId, String newName) {
         Dinosaur dino = dinosaurRepo.getDinosaurByDinoId(dinoId);
-        dino.setDinosaur_nickname(newName);
+        dino.setDinosaurNickname(newName);
         dinosaurRepo.save(dino);
     }
 

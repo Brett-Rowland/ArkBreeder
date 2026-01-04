@@ -16,18 +16,19 @@ public class DinoColors {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dino_color_id")
     private Long dinoColorID;
 
-    @Column
+    @Column(name = "color_region")
     private int colorRegion;
 
     @ManyToOne
-    @JoinColumn(name = "color_id")
+    @JoinColumn(name = "colorId")
+    @JsonBackReference("color-dinosaur")
     private ArkColors arkColor;
 
     @ManyToOne
     @JoinColumn(name = "dino_id")
-    @JsonBackReference
+    @JsonBackReference("dino-colors")
     private Dinosaur dinosaur;
-
 }

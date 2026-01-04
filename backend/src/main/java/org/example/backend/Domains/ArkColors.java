@@ -1,6 +1,7 @@
 package org.example.backend.Domains;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,10 +18,12 @@ import java.util.List;
 public class ArkColors {
 
     @Id
-    private long id;
+    @Column(name = "color_id")
+    private long colorId;
 
 
     @OneToMany(mappedBy = "arkColor")
+    @JsonManagedReference("color-dinosaur")
     private List<DinoColors> dinoColors;
 
     @Embedded

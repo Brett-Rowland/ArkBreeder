@@ -1,11 +1,11 @@
 package org.example.backend.Domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.backend.ValueObjects.Stats;
 
 import java.util.List;
 
@@ -21,7 +21,8 @@ public class Dinosaur {
 
     public enum Gender {
         MALE,
-        FEMALE
+        FEMALE,
+        MAEWING
     }
 
     @Id
@@ -29,56 +30,28 @@ public class Dinosaur {
     @Column(name = "dino_id")
     private Long dinoId;
 
-    @Column (nullable = true, length = 127)
-    private String dinosaur_nickname;
+    @Column (length = 127, name = "dinosaur_nickname")
+    private String dinosaurNickname;
+
+    @Column (length = 127)
+    private Gender gender =  Gender.MALE;
 
     @ManyToOne
     @JoinColumn(name = "breeding_line_id")
+    @JsonBackReference("dino-line")
     private BreedingLine breedingLineId;
 
     @OneToMany(mappedBy = "dinosaur")
-    @JsonManagedReference
+    @JsonManagedReference("dino-colors")
     private List<DinoColors> dinoColors;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "statPoints", column = @Column(name = "health_points")),
-            @AttributeOverride(name = "mutationCount", column = @Column(name = "health_mutations"))
-    })
-    private Stats health;
+    @OneToMany(mappedBy = "dinosaur", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<DinosaurStats> dinosaurStats;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "statPoints", column = @Column(name = "stamina_points")),
-            @AttributeOverride(name = "mutationCount", column = @Column(name = "stamina_mutations"))
-    })
-    private Stats stamina;
+    @Column(name = "taming_effect")
+    private float tamingEffectiveness;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "statPoints", column = @Column(name = "food_points")),
-            @AttributeOverride(name = "mutationCount", column = @Column(name = "food_mutations"))
-    })
-    private Stats food;
+    private boolean deleted = false;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "statPoints", column = @Column(name = "oxygen_points")),
-            @AttributeOverride(name = "mutationCount", column = @Column(name = "oxygen_mutations"))
-    })
-    private Stats oxygen;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "statPoints", column = @Column(name = "weight_points")),
-            @AttributeOverride(name = "mutationCount", column = @Column(name = "weight_mutations"))
-    })
-    private Stats weight;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "statPoints", column = @Column(name = "melee_points")),
-            @AttributeOverride(name = "mutationCount", column = @Column(name = "melee_mutations"))
-    })
-    private Stats melee;
 }

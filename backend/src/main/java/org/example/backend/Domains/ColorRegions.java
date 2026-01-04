@@ -9,14 +9,11 @@ import lombok.ToString;
 
 @Data
 @Entity
-@Table(name = "dinosaur_color_region")
+@Table(name = "creature_color_region")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ColorRegions {
-
-
     public enum Visibility {
-        NOT_VISIBLE,
         VISIBLE_COLOR,
         VISIBLE_DATA
     }
@@ -26,8 +23,8 @@ public class ColorRegions {
     private Long DCRId;
 
     @ManyToOne
-    @JoinColumn(name = "species_id")
-    @JsonBackReference
+    @JoinColumn(name = "creature_id")
+    @JsonBackReference("creature-regions")
     @ToString.Exclude
     private Creature creature;
 
