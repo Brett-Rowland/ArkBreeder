@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SettingsForm from "../components/SettingsForm"
 import DinoDisplay from "../components/DinoSettingsDisplay"
 
@@ -16,8 +16,25 @@ import DinoDisplay from "../components/DinoSettingsDisplay"
  */
 
 export default function Settings(){
+    
+    const [settings, updateSettings] = useState({
+        "eggHatch":1,
+        "mating":1,
+        "maturation":1,
+        "imprint":1,
+        "singlePlayer":true,
+        "stats":{
+            "health":[1,0.14,0.44],
+            "stamina":[1,1,1],
+            "food":[1,1,1],
+            "oxygen":[1,1,1],
+            "weight":[1,1,1],
+            "melee":[1,0.14,0.44],
+        }
+    });
 
 
+    const [personalSettings, setPersonalSettings] = useState({});
 /**
  * Tomorrow Work on Settings Form Components
  * 
@@ -27,7 +44,24 @@ export default function Settings(){
  */
 
 
+    useEffect(()=>{
+        var beginningToken = sessionStorage.getItem("token");
+        const token = beginningToken === null ? 6423385 : beginningToken;
+        // Go and grab the settings available. On change of the settings is when everything is switched on over
+        try{
+            const res = fetch(`http://localhost:8787/servers/settings/${token}`, {method:"GET"})
 
+            if (res.status !== 200){
+                throw new Error("Failure to get personal settings")
+            }
+            const newSettings = res.json();
+
+            setPersonalSettings(newSettings)
+        }
+        catch(error){
+            console.error(error)
+        }
+    },[])
 
     return(
         <>
@@ -35,7 +69,7 @@ export default function Settings(){
             <div>
                 
                 {/* Settings Form */}
-                <SettingsForm/>
+                <SettingsForm settings={settings} updateSettings={updateSettings} />
 
 
                 {/* Dino Live Update Display */}
