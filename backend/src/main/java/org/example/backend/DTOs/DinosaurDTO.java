@@ -59,4 +59,13 @@ public class DinosaurDTO {
      * Display nickname for the dinosaur.
      */
     private String dinosaurNickname;
+
+    private Integer maternalMutations;
+
+    private Integer paternalMutations;
+    /**
+     * Creature name if dinosaur doesnt have a nickname
+     *
+    */
+    private String creatureName;
 }

@@ -3,7 +3,9 @@ package org.example.backend.DTOs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.backend.ValueObjects.BreedingSettings;
+import org.example.backend.Domains.BreedingSettings;
+
+import java.util.List;
 
 /**
  * SettingsDTO.
@@ -45,7 +47,7 @@ public class SettingsDTO {
     /**
      * Breeding-related configuration values.
      */
-    BreedingSettings breedingSettings;
+    List<BreedingSettings> breedingSettings;
 
     /**
      * Constructor used for lightweight settings listings.

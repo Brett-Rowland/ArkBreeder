@@ -3,47 +3,13 @@ import { useEffect, useState } from "react"
 export default function DinoValidation() {
 
     const [settings, setSettings] = useState({
-        healthScaleFactor: 1,
-        staminaScaleFactor: 1,
-        oxygenScaleFactor: 1,
-        foodScaleFactor: 1,
-        weightScaleFactor: 1,
-        meleeScaleFactor: 1,
-        healthAdditive: 0.14,
-        healthAffinity: 0.44,
-
-        foodAffinity: 1,
-
-        meleeAdditive: 0.14,
-        meleeAffinity: 0.44,
+        Health:{"stats":0,"wildScale":1, "statAdditive":.14,"statAffinity":.44},
+        Stamina:{"stats":1,"wildScale":1, "statAdditive":1,"statAffinity":1},
+        Oxygen:{"stats":3,"wildScale":1, "statAdditive":1,"statAffinity":1},
+        Food:{"stats":5,"wildScale":1, "statAdditive":1,"statAffinity":1},
+        Weight:{"stats":6,"wildScale":1, "statAdditive":1,"statAffinity":1},
+        Melee:{"stats":7,"wildScale":1, "statAdditive":.14,"statAffinity":.44}
     });
-
-
-    const statConfig = {
-      Health: {
-        scale: "healthScaleFactor",
-        additive: "healthAdditive",
-        multiplicand: "healthAffinity",
-      },
-      Stamina: {
-        scale: "staminaScaleFactor",
-      },
-      Oxygen: {
-        scale: "oxygenScaleFactor",
-      },
-      Food: {
-        scale: "foodScaleFactor",
-        multiplicand: "foodAffinity",
-      },
-      Weight: {
-        scale: "weightScaleFactor",
-      },
-      Melee: {
-        scale: "meleeScaleFactor",
-        additive: "meleeAdditive",
-        multiplicand: "meleeAffinity",
-      }
-    };
 
 
     const [dinoList, setDinoList] = useState([]);
@@ -55,10 +21,13 @@ export default function DinoValidation() {
 
 
     // handles the change with anything in the settings
-    const handleChange = (key, value) => {
+    const handleChange = (key, value, statChoice) => {
       setSettings(prev => ({
         ...prev,
-        [key]: value === "" ? "" : Number(value)
+        [key]:{
+          ...prev[key],
+          [statChoice]: value === "" ? "" : Number(value)
+        }
       }));
     };
 
@@ -76,7 +45,6 @@ export default function DinoValidation() {
               }
           })
           .then((data)=>{
-              // console.log(data)
               setDinoList(data);
           })
           .catch((error) => {
@@ -96,7 +64,6 @@ export default function DinoValidation() {
         setColorRegions(dino?.colorRegionTotal)
       }
   })
-  // console.log(creatureId);
 
   try {
     const res = await fetch(`http://localhost:8787/creatures/validation/${creatureId}`);
@@ -106,7 +73,6 @@ export default function DinoValidation() {
     }
 
     const data = await res.json();
-    // console.log(data);
     setDinoStatsType(data); // <-- now guaranteed to be finished
   } catch (err) {
     console.error(err);
@@ -116,7 +82,6 @@ export default function DinoValidation() {
 
 // Does the change on the stat Points
 const handleStatChange = (statName, newValue) => {
-    // console.log(dinoStatsType)
   setDinoStatsType((dinoStatsType) =>
     dinoStatsType.map((stat) =>
       stat.statType === statName
@@ -144,21 +109,20 @@ const validateCreature = async () => {
 
 
 const buildValidationJSON = () => {
-  // console.log("Dinosaur Stat Type ",dinoStatsType)
-  // console.log("Settings ",settings)
+   const breedingSettings = Object.values(settings);
+
+
     var returnValue = {
         "stats": dinoStatsType,
         "creatureId": selectedDino,
         "tamingEffectiveness":tamingEffectiveness,
-        "breedingSettings":settings
+        "breedingSettings":breedingSettings
     }
     return returnValue;
 }
 const calcCreature = async() => {
-    // console.log("Calculating Creature")
     try{
         const body = buildValidationJSON()
-        // console.log("Body: ", body)
         const res = await fetch(`http://localhost:8787/creatures/validation/cal`,
           {method:"POST", 
             headers: {
@@ -269,12 +233,12 @@ return (
         <th className="px-3 py-2 text-left">Stat Type</th>
         <th className="px-3 py-2 text-center">Wild Scale</th>
         <th className="px-3 py-2 text-center">Additive</th>
-        <th className="px-3 py-2 text-center">Multiplicand</th>
+        <th className="px-3 py-2 text-center">Affinity</th>
       </tr>
     </thead>
 
     <tbody className="divide-y divide-slate-800">
-      {Object.entries(statConfig).map(([label, fields]) => (
+      {Object.entries(settings).map(([label, _]) => (
         <tr key={label} className="hover:bg-slate-800/40 transition">
           <td className="px-3 py-2">{label}</td>
 
@@ -282,41 +246,33 @@ return (
             <input
               type="number"
               step="0.01"
-              value={settings[fields.scale] ?? ""}
-              onChange={(e) => handleChange(fields.scale, e.target.value)}
+              value={settings[label]?.wildScale ?? ""}
+              onChange={(e) => handleChange(label, e.target.value, "wildScale")}
               className="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-100 
                          focus:outline-none focus:ring-1 focus:ring-teal-400"
             />
           </td>
 
           <td className="px-3 py-2 text-center">
-            {fields.additive ? (
-              <input
-                type="number"
-                step="0.01"
-                value={settings[fields.additive] ?? ""}
-                onChange={(e) => handleChange(fields.additive, e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-100 
-                           focus:outline-none focus:ring-1 focus:ring-teal-400"
-              />
-            ) : (
-              <span className="text-slate-600">—</span>
-            )}
+            <input
+              type="number"
+              step="0.01"
+              value={settings[label]?.statAdditive ?? ""}
+              onChange={(e) => handleChange(label, e.target.value, "statAdditive")}
+              className="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-100 
+                         focus:outline-none focus:ring-1 focus:ring-teal-400"
+            />
           </td>
 
           <td className="px-3 py-2 text-center">
-            {fields.multiplicand ? (
-              <input
-                type="number"
-                step="0.01"
-                value={settings[fields.multiplicand] ?? ""}
-                onChange={(e) => handleChange(fields.multiplicand, e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-100 
-                           focus:outline-none focus:ring-1 focus:ring-teal-400"
-              />
-            ) : (
-              <span className="text-slate-600">—</span>
-            )}
+            <input
+              type="number"
+              step="0.01"
+              value={settings[label]?.statAffinity ?? ""}
+              onChange={(e) => handleChange(label, e.target.value,"statAffinity")}
+              className="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-100 
+                         focus:outline-none focus:ring-1 focus:ring-teal-400"
+            />
           </td>
         </tr>
       ))}
@@ -359,6 +315,7 @@ return (
               <input
                 type="number"
                 step={1}
+                min={0}
                 value={stat.totalPoints}
                 onChange={(e) =>
                   handleStatChange(stat.statType, e.target.value)

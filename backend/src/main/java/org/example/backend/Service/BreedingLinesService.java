@@ -8,7 +8,6 @@ import org.example.backend.DTOs.BreedingLineDTO;
 import org.example.backend.DTOs.StatsDTO;
 import org.example.backend.Domains.*;
 import org.example.backend.Repo.*;
-import org.example.backend.ValueObjects.BreedingSettings;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -145,18 +144,12 @@ public class BreedingLinesService {
 
 //            Settings, Base Stats
             List<BaseStats> baseStats = baseStatsRepo.getBaseStatsASC(bl.getCreature());
-            BreedingSettings breedingSettings;
-            if (bl.getServer() == null){
-                breedingSettings = new BreedingSettings(1f,1f,1f,1f,1f,1f,.14f,.4f,1f,.14f,.44f);
-            }
-            else{
-                breedingSettings = bl.getServer().getSettings().getBreedingSettings();
-            }
+            List<BreedingSettings> breedingSettings = bl.getServer().getBreedingSettings();
 
 //            Calculation on the stats
             for (int i = 0; i<st.size(); i++){
                 StatsDTO updateStat = st.get(i);
-                updateStat.setCalcTotal(computationService.calculation(breedingSettings, baseStats.get(i), updateStat.getTotalPoints(), 1f, updateStat.getStatType()));
+                updateStat.setCalcTotal(computationService.calculation(breedingSettings.get(i), baseStats.get(i), updateStat.getTotalPoints(), 1f, updateStat.getStatType()));
             }
 
             newBreedingLine.setColorRegions(breedingLinesRepo.getDisplayColorRegions(bl.getBreedingLineId()));

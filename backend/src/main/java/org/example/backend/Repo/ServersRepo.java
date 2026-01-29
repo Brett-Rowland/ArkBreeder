@@ -70,4 +70,8 @@ public interface ServersRepo extends JpaRepository<Servers, Long> {
                     "ORDER BY sr.serverType, sr.serverName"
     )
     List<SettingsDTO> getServersByToken(@Param("token") Long token);
+
+
+//    @Query("SELECT sr from Servers sr WHERE sr.serverName = :name and sr.serverType = Servers.serverType.OFFICIAL")
+//    Servers getOfficialServerStats(@Param("name"));
 }

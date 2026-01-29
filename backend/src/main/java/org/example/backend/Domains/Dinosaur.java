@@ -112,6 +112,12 @@ public class Dinosaur {
     private float tamingEffectiveness;
 
     /**
+     * Imprint value applied during stat calculations
+     * */
+    @Column(name = "imprint")
+    private float imprint;
+
+    /**
      * Soft delete flag. True indicates this dinosaur is inactive/deleted.
      */
     private boolean deleted = false;

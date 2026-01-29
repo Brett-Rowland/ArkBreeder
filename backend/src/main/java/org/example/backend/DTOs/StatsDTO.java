@@ -3,6 +3,7 @@ package org.example.backend.DTOs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backend.Domains.DinosaurStats;
 import org.example.backend.ValueObjects.Stats;
 
 /**
@@ -45,7 +46,7 @@ public class StatsDTO {
     /**
      * Computed stat value after applying calculation logic.
      */
-    private float calcTotal;
+    private float calcTotal = 0;
 
     /**
      * Constructor used when only stat type and point allocation are required.
@@ -63,4 +64,18 @@ public class StatsDTO {
     public StatsDTO(Stats.STATS statType) {
         this.statType = statType;
     }
+
+    public StatsDTO setUpStatsDTO(DinosaurStats dinosaurStats) {
+        StatsDTO statsDTO = new StatsDTO();
+
+        statsDTO.setStatType(dinosaurStats.getStats().getStatType());
+
+        int wildPoints = dinosaurStats.getStats().getStatPoints();
+        int mutationPoints = dinosaurStats.getStats().getMutationCount();
+
+        statsDTO.setTotalPoints(wildPoints + (mutationPoints *2));
+        return statsDTO;
+    }
+
+
 }

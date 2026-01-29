@@ -65,8 +65,9 @@ export default function Settings(){
 
     return(
         <>
+            <div className="min-h-screen bg-zinc-950 text-zinc-100">
             {/* Main Div To Hold Each Item */}
-            <div>
+            <div className="mx-auto max-w-6xl px-4 py-8 space-y-6">
                 
                 {/* Settings Form */}
                 <SettingsForm settings={settings} updateSettings={updateSettings} />
@@ -75,6 +76,7 @@ export default function Settings(){
                 {/* Dino Live Update Display */}
                 <DinoDisplay/>
             
+                </div>
             </div>
         </>
     )

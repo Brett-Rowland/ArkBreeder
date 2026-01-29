@@ -2,7 +2,6 @@ package org.example.backend.Controller;
 
 import lombok.AllArgsConstructor;
 import org.example.backend.Domains.Servers;
-import org.example.backend.Domains.Settings;
 import org.example.backend.Service.ServersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +47,9 @@ public class ServersController {
      * - Settings are currently retrieved independently but are logically tied
      *   to a server entity.
      */
-    @GetMapping("/{settingsId}/settings")
-    public ResponseEntity<?> getSettings(@PathVariable Long settingsId) {
-        return new ResponseEntity<>(serversService.getSettings(settingsId), HttpStatus.OK);
+    @GetMapping("/{serverId}/server")
+    public ResponseEntity<?> getSettings(@PathVariable Long serverId) {
+        return new ResponseEntity<>(serversService.getSettings(serverId), HttpStatus.OK);
     }
 
     /**
@@ -68,7 +67,7 @@ public class ServersController {
      */
     @DeleteMapping("/{serverID}/delete")
     public ResponseEntity<?> deleteServer(@PathVariable Long serverID) {
-        serversService.deleteSettings(serverID);
+        serversService.deleteServers(serverID);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -79,7 +78,7 @@ public class ServersController {
      * - serverId: ID of the server to update
      *
      * Request body:
-     * - settings: {@link Settings} object containing updated calculation values
+     * - server: {@link Servers} object containing updated calculation values
      *
      * Query parameters:
      * - serverName: new display name for the server
@@ -94,10 +93,10 @@ public class ServersController {
     @PutMapping("/{serverId}/update")
     public ResponseEntity<?> updateServer(
             @PathVariable Long serverId,
-            @RequestBody Settings settings,
+            @RequestBody Servers server,
             @RequestParam String serverName) {
 
-        serversService.updateServer(serverId, settings, serverName);
+        serversService.updateServer(serverId, server, serverName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

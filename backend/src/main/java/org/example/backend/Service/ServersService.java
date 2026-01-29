@@ -1,14 +1,17 @@
 package org.example.backend.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.backend.Domains.Servers;
-import org.example.backend.Domains.Settings;
 import org.example.backend.Domains.Users;
+import org.example.backend.Domains.BreedingSettings;
+import org.example.backend.Repo.BreedingSettingsRepo;
 import org.example.backend.Repo.ServersRepo;
-import org.example.backend.Repo.SettingsRepo;
 import org.example.backend.Repo.UsersRepo;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ import java.util.List;
  *
  * Notes:
  * - Servers represent a logical grouping of breeding settings.
- * - Each server owns exactly one {@link Settings} record.
+ * - Each server owns exactly one {@link BreedingSettings} record.
  * - OFFICIAL servers are global and not tied to a specific user.
  */
 @Service
@@ -34,7 +37,7 @@ import java.util.List;
 public class ServersService {
 
     /** Repository for settings persistence and retrieval. */
-    SettingsRepo settingsRepo;
+    BreedingSettingsRepo  breedingSettingsRepo;
 
     /** Repository for server persistence and lookup. */
     ServersRepo serversRepo;
@@ -45,11 +48,11 @@ public class ServersService {
     /**
      * Retrieves a settings record by its unique identifier.
      *
-     * @param settingsId unique identifier of the settings record
-     * @return matching {@link Settings} entity
+     * @param serversId unique identifier of the server record
+     * @return matching {@link Servers} entity
      */
-    public Settings getSettings(Long settingsId) {
-        return settingsRepo.getSettingsBySettingsId(settingsId);
+    public Servers getSettings(Long serversId) {
+        return serversRepo.getServersByServerId(serversId);
     }
 
     /**
@@ -70,7 +73,7 @@ public class ServersService {
      * Deletes a server and its associated settings.
      *
      * Persisted effects:
-     * - deletes the {@link Settings} record tied to the server
+     * - deletes the {@link BreedingSettings} records tied to the server
      * - deletes the {@link Servers} record itself
      *
      * Notes:
@@ -79,13 +82,11 @@ public class ServersService {
      *
      * @param serverID unique identifier of the server to delete
      */
-    public void deleteSettings(Long serverID) {
+    @Transactional
+    public void deleteServers(Long serverID) {
         Servers server = serversRepo.getServersByServerId(serverID);
-        Long settingsId = server.getSettings().getSettingsId();
-
-        Settings settings = settingsRepo.getSettingsBySettingsId(settingsId);
-
-        settingsRepo.delete(settings);
+        List<BreedingSettings> breedingSettings = server.getBreedingSettings();
+        breedingSettingsRepo.deleteAll(breedingSettings);
         serversRepo.delete(server);
     }
 
@@ -93,35 +94,46 @@ public class ServersService {
      * Updates an existing server configuration.
      *
      * Persisted effects:
-     * - replaces the server's {@link Settings} reference
+     * - replaces the server's {@link BreedingSettings} reference
      * - updates the server display name
      * - deletes the previous settings record to prevent orphaned data
      *
      * Notes:
-     * - This method assumes the incoming {@link Settings} object
+     * - This method assumes the incoming {@link Servers} object
      *   represents a full replacement configuration.
      *
      * @param serverID unique identifier of the server to update
-     * @param settings new settings configuration to apply
+     * @param newServer new server configuration to apply
      * @param serverName new display name for the server
      */
-    public void updateServer(Long serverID, Settings settings, String serverName) {
+    @Transactional
+    public void updateServer(Long serverID, Servers newServer, String serverName) {
         Servers server = serversRepo.getServersByServerId(serverID);
-        Long oldSettingsId = server.getSettings().getSettingsId();
 
-        server.setSettings(settings);
+        List<BreedingSettings> newBreedingSettings = newServer.getBreedingSettings();
+        List<BreedingSettings> oldBreedingSettings = new ArrayList<>(server.getBreedingSettings());
+
         server.setServerName(serverName);
-        serversRepo.save(server);
+        server.transferSettingsToServer(newServer);
 
+        for  (BreedingSettings newBreedingSetting : newBreedingSettings) {
+            newBreedingSetting.setServer(server);
+        }
+
+        server.setBreedingSettings(newBreedingSettings);
+
+        serversRepo.save(server);
+        breedingSettingsRepo.saveAll(newBreedingSettings);
+
+        breedingSettingsRepo.deleteAll(oldBreedingSettings);
         // Clean up the previous settings record
-        settingsRepo.deleteBySettingsId(oldSettingsId);
     }
 
     /**
      * Creates a new server configuration.
      *
      * Persisted effects:
-     * - saves the associated {@link Settings} record
+     * - saves the associated {@link BreedingSettings} record
      * - saves the {@link Servers} record
      *
      * Ownership rules:
@@ -135,8 +147,11 @@ public class ServersService {
         if (server.getServerType() != Servers.serverType.OFFICIAL) {
             server.setUser(usersRepo.getUsersByToken(token));
         }
-
-        settingsRepo.save(server.getSettings());
+        for (BreedingSettings newBreedingSetting : server.getBreedingSettings()) {
+            newBreedingSetting.setServer(server);
+        }
         serversRepo.save(server);
+        breedingSettingsRepo.saveAll(server.getBreedingSettings());
+
     }
 }

@@ -3,7 +3,7 @@ package org.example.backend.DTOs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.backend.ValueObjects.BreedingSettings;
+import org.example.backend.Domains.BreedingSettings;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class ValidationInput {
     /**
      * Breeding-related configuration values applied during validation.
      */
-    private BreedingSettings breedingSettings;
+    private List<BreedingSettings> breedingSettings;
 
     /**
      * Stat values submitted for validation.
