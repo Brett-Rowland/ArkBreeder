@@ -134,4 +134,5 @@ public class BreedingLinesController {
         breedingLinesService.updateSettings(lineId, serverId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backend.DTOs.DinosaurColorRegionDTO;
 
 /**
  * DinoColors table.
@@ -72,4 +73,8 @@ public class DinoColors {
     @JoinColumn(name = "dino_id")
     @JsonBackReference("dino-colors")
     private Dinosaur dinosaur;
+
+    public DinosaurColorRegionDTO toDTO(){
+     return new DinosaurColorRegionDTO(this.arkColor.getColorId(),this.colorRegion, this.arkColor.getColor().getColorName(), this.arkColor.getColor().getColorHex());
+    }
 }

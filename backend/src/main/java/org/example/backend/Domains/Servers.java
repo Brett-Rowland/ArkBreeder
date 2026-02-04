@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backend.DTOs.SettingsDTO;
 
 import java.util.List;
 
@@ -141,5 +142,17 @@ public class Servers {
         this.eggHatchRate = newServers.getEggHatchRate();
         this.imprintScale = newServers.getImprintScale();
         this.singlePlayer = newServers.getSinglePlayer();
+    }
+
+
+    public SettingsDTO convertToSettingsDTO() {
+        SettingsDTO settingsDTO = new SettingsDTO();
+
+        settingsDTO.setSettingsId(this.serverId);
+        settingsDTO.setSettingsName(this.serverName);
+        settingsDTO.setBreedingSettings(this.breedingSettings);
+        settingsDTO.setImprintScale(this.imprintScale);
+        settingsDTO.setSinglePlayer(this.singlePlayer);
+        return settingsDTO;
     }
 }

@@ -1,6 +1,7 @@
 package org.example.backend.Service;
 
 import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.DinosaurColorRegionDTO;
 import org.example.backend.DTOs.DinosaurDTO;
 import org.example.backend.DTOs.StatsDTO;
 import org.example.backend.DTOs.ValidationInput;
@@ -10,10 +11,26 @@ import org.example.backend.ValueObjects.Stats;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+/**
+ * TODO: dinoComputation update Color Regions to bring back actual colors assigned to each region
+ *
+ * One sample
+ *
+ *  "dinoColorID": 5,
+ *  "colorRegion": 4
+ *
+ * Should be
+ *  "dinoColorID": 5,
+ *  "colorRegion": 4
+ *
+ *
+ * */
+
+
 
 /**
  * ComputationService.
@@ -35,6 +52,7 @@ import java.util.stream.Collectors;
  *   stat type ordering (ASC). Repositories enforce ordering via queries.
  * - Some stat types share formulas (e.g., stamina/charge capacity).
  */
+
 @Service
 @AllArgsConstructor
 public class ComputationService {
@@ -76,7 +94,6 @@ public class ComputationService {
         }
 
         double finalStat = ((baseValue * (1 + totalPoints * incrementValue * settings.getWildScale()) + baseStats.getStats().getStatAdditive() * settings.getStatAdditive()) * (1 + effectiveTE * baseStats.getStats().getStatMultiplicand() * effectiveSettingsMult));
-        System.out.println(statType + " " + baseStats.getStats().getBaseValue() + " " + baseStats.getStats().getIncrementPerPoint() +  " " + baseStats.getStats().getStatMultiplicand() + " " + baseStats.getStats().getStatAdditive());
 //        switch (statType) {
 //            case HEALTH:
 //                finalStat = ((baseValue * (1 + totalPoints * incrementValue * settings.getHealthScaleFactor())) * (1 + baseStats.getStats().getStatMultiplicand())) + (baseStats.getStats().getStatAdditive() * settings.getHealthAdditive());
@@ -217,7 +234,12 @@ public class ComputationService {
         }
 
         dinosaurTransfer.setStats(transferComputedStats);
-        dinosaurTransfer.setColorRegions(dinosaur.getDinoColors());
+
+        List<DinosaurColorRegionDTO> dinosaurColorRegionDTOS = new ArrayList<>();
+        for (DinoColors dinoColors : dinosaur.getDinoColors()) {
+            dinosaurColorRegionDTOS.add(dinoColors.toDTO());
+        }
+        dinosaurTransfer.setColorRegions(dinosaurColorRegionDTOS);
         dinosaurTransfer.setDinoId(dinosaur.getDinoId());
         dinosaurTransfer.setDinosaurNickname(dinosaur.getDinosaurNickname());
         return dinosaurTransfer;

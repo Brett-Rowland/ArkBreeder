@@ -132,4 +132,9 @@ public class DinosaurController {
         return new ResponseEntity<>(computationService.dinoComputation(dinoId), HttpStatus.OK);
     }
 
+    @GetMapping("/{lineId}")
+    public ResponseEntity<?> DinosaurPage(@PathVariable Long lineId){
+        return new ResponseEntity<>(dinosaurService.buildDinosaurPage(lineId), HttpStatus.OK);
+    }
+
 }

@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import BreedingLines from './pages/BreedingLines'
 import DinoValidation from './pages/DinoValidation'
 import Settings from './pages/Settings'
+import DinosaurLine from './pages/DinosaurLine'
 
 export default function App() {
 
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/breeding-lines" element={<BreedingLines/>}/>
         <Route path="/validation" element={<DinoValidation/>}/>
         <Route path="/settings" element={<Settings/>} />
+        <Route path='/breeding-lines/:lineId' element={<DinosaurLine/>}/>
       </Routes>
     </>
   )

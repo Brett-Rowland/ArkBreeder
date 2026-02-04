@@ -5,8 +5,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.core.annotation.Order;
+import org.example.backend.DTOs.BaseStatsDTO;
+import org.example.backend.DTOs.CreatureDTO;
+import org.example.backend.DTOs.CreatureRegionsDTO;
+import org.example.backend.DTOs.ValidationCreatureDTO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -104,4 +108,32 @@ public class Creature {
      */
     @Column
     private boolean validated = false;
+
+
+    /**
+     * Function to convert object into a Data Transfer Object
+     * */
+    public CreatureDTO toDTO() {
+        CreatureDTO creatureDTO = new CreatureDTO();
+
+        creatureDTO.setCreatureId(this.creatureId);
+        creatureDTO.setCreatureName(this.creatureName);
+
+
+        List<BaseStatsDTO> baseStatsDTOs = new ArrayList<>();
+
+        for (BaseStats baseStats : this.baseStats) {
+            baseStatsDTOs.add(baseStats.toDTO());
+        }
+        creatureDTO.setBaseStatsDTOList(baseStatsDTOs);
+
+        List<CreatureRegionsDTO> creatureRegionsDTOs = new ArrayList<>();
+        for (ColorRegions colorRegions : this.colorRegions) {
+            creatureRegionsDTOs.add(colorRegions.toDTO());
+        }
+        creatureDTO.setColorRegionsList(creatureRegionsDTOs);
+        return creatureDTO;
+    }
+
+
 }

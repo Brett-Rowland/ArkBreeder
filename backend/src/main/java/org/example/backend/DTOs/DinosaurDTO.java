@@ -53,7 +53,7 @@ public class DinosaurDTO {
     /**
      * Color assignments for this dinosaur by region.
      */
-    private List<DinoColors> colorRegions;
+    private List<DinosaurColorRegionDTO> colorRegions;
 
     /**
      * Display nickname for the dinosaur.

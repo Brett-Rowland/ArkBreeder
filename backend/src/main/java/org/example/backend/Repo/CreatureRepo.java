@@ -1,6 +1,6 @@
 package org.example.backend.Repo;
 
-import org.example.backend.DTOs.CreatureDTO;
+import org.example.backend.DTOs.ValidationCreatureDTO;
 import org.example.backend.Domains.Creature;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +19,7 @@ import java.util.List;
  *
  * Notes:
  * - Creature records represent species-level reference data.
- * - Several queries return {@link CreatureDTO} projections to avoid
+ * - Several queries return {@link ValidationCreatureDTO} projections to avoid
  *   loading full entity graphs when only summary data is required.
  */
 @Repository
@@ -53,10 +53,10 @@ public interface CreatureRepo extends JpaRepository<Creature, Long> {
      *
      * Results are ordered alphabetically by creature name.
      *
-     * @return list of {@link CreatureDTO} for unvalidated creatures
+     * @return list of {@link ValidationCreatureDTO} for unvalidated creatures
      */
     @Query(
-            "SELECT new org.example.backend.DTOs.CreatureDTO(" +
+            "SELECT new org.example.backend.DTOs.ValidationCreatureDTO(" +
                     "  cs.creatureId, cs.creatureName, COUNT(cr)" +
                     ") " +
                     "FROM Creature cs " +
@@ -65,7 +65,7 @@ public interface CreatureRepo extends JpaRepository<Creature, Long> {
                     "GROUP BY cs.creatureId, cs.creatureName " +
                     "ORDER BY cs.creatureName"
     )
-    List<CreatureDTO> getUnvalidatedCreatures();
+    List<ValidationCreatureDTO> getUnvalidatedCreatures();
 
     /**
      * Retrieves all validated creature species.
@@ -75,13 +75,13 @@ public interface CreatureRepo extends JpaRepository<Creature, Long> {
      *
      * Results are ordered alphabetically by creature name.
      *
-     * @return list of {@link CreatureDTO} for validated creatures
+     * @return list of {@link ValidationCreatureDTO} for validated creatures
      */
     @Query(
-            "SELECT new org.example.backend.DTOs.CreatureDTO(cs.creatureId, cs.creatureName) " +
+            "SELECT new org.example.backend.DTOs.ValidationCreatureDTO(cs.creatureId, cs.creatureName) " +
                     "FROM Creature cs " +
                     "WHERE cs.validated = true " +
                     "ORDER BY cs.creatureName"
     )
-    List<CreatureDTO> getValidatedCreatures();
+    List<ValidationCreatureDTO> getValidatedCreatures();
 }

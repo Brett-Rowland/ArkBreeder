@@ -3,6 +3,7 @@ import BreedingContainer from "../components/BreedingLineContainer"
 import "../pages/Styling/breedingLine.css"
 import NewBreedingLine from "../components/NewBreedingLinePopup"
 
+
 export default function BreedingLines(){
 
     // Use state for dino information
@@ -13,7 +14,6 @@ export default function BreedingLines(){
     const [open, setOpen] = useState(false);;
 
     const token = sessionStorage.getItem("token");
-  
 
 
     // To Do List

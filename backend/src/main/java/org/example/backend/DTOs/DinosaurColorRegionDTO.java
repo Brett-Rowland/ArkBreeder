@@ -1,5 +1,6 @@
 package org.example.backend.DTOs;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,8 +28,13 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class ColorRegionDTO {
+@AllArgsConstructor
+public class DinosaurColorRegionDTO {
 
+    /**
+     * Number representing what color it identifies in Ark Survival Ascended
+     * */
+    private long colorNumber;
     /**
      * Numeric Ark color region index (e.g., 0–5).
      */
@@ -48,7 +54,7 @@ public class ColorRegionDTO {
      * Convenience constructor for creating a color region DTO
      * with all required display values.
      */
-    public ColorRegionDTO(int colorRegion, String colorName, String hexCode) {
+    public DinosaurColorRegionDTO(int colorRegion, String colorName, String hexCode) {
         this.colorRegion = colorRegion;
         this.colorName = colorName;
         this.hexCode = hexCode;

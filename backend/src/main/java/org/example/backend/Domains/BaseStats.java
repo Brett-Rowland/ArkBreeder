@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.example.backend.DTOs.BaseStatsDTO;
 import org.example.backend.ValueObjects.StatsDefaults;
 
 /**
@@ -70,4 +71,8 @@ public class BaseStats {
      */
     @Embedded
     private StatsDefaults stats;
+
+    public BaseStatsDTO toDTO(){
+        return new BaseStatsDTO( stats.statType,stats.getBaseValue(), stats.getIncrementPerPoint(), stats.getStatAdditive(), stats.getStatMultiplicand());
+    }
 }

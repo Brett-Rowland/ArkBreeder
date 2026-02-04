@@ -1,5 +1,7 @@
 import ColorRegion from "./ColorRegion"
 import StatsDisplay from "./StatsDisplay"
+import { useNavigate } from "react-router"
+
 
 export default function BreedingContainer({breedingLine}){
       
@@ -8,17 +10,22 @@ export default function BreedingContainer({breedingLine}){
   const baseColorRegion = {
 
   }
-
+  let nav = useNavigate();
+  
   // Array List of 6 elements
   var colorRegions = [0,1,2,3,4,5];
   var colorRegionNumber = 0;
   var creatureName = breedingLine?.creatureName;
 
 
+  const insideLine = () => {
+    nav(`/breeding-lines/${breedingLine?.breedingLineId}`)
+  }
+
     
     return(<>
         <div
-              className="rounded-2xl border border-gray-200 bg-white shadow-md p-1.5 flex flex-col"
+              className="rounded-2xl border border-gray-200 bg-white shadow-md p-1.5 flex flex-col" onClick={insideLine}
             >
 
             {/* Header */}

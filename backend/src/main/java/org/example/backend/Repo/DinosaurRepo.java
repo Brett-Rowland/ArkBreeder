@@ -1,7 +1,10 @@
 package org.example.backend.Repo;
 
+import org.example.backend.Domains.BreedingLine;
 import org.example.backend.Domains.Dinosaur;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +34,7 @@ public interface DinosaurRepo extends JpaRepository<Dinosaur, Long> {
      * @return matching {@link Dinosaur} entity
      */
     Dinosaur getDinosaurByDinoId(Long DinosaurId);
+
+    @Query("SELECT dino from Dinosaur dino WHERE dino.breedingLineId = ?1")
+    List<Dinosaur> getDinosaurByBreedingLineId(BreedingLine breedingLine, PageRequest pageRequest);
 }

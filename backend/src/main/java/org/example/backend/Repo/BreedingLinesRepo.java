@@ -1,6 +1,6 @@
 package org.example.backend.Repo;
 
-import org.example.backend.DTOs.ColorRegionDTO;
+import org.example.backend.DTOs.DinosaurColorRegionDTO;
 import org.example.backend.DTOs.StatsDTO;
 import org.example.backend.Domains.BreedingLine;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +22,7 @@ import java.util.List;
  * - retrieving display-ready color region information for the line
  *
  * Notes:
- * - Several queries return DTO projections (e.g., {@link StatsDTO}, {@link ColorRegionDTO})
+ * - Several queries return DTO projections (e.g., {@link StatsDTO}, {@link DinosaurColorRegionDTO})
  *   to avoid loading entire entity graphs when only computed/display values are needed.
  * - Pagination for line lists is supported using {@link Pageable}.
  */
@@ -81,7 +81,7 @@ public interface BreedingLinesRepo extends JpaRepository<BreedingLine, Long> {
      * - selects the dinosaur with the smallest dinoId in the line
      *
      * Returns DTO projection:
-     * - {@link ColorRegionDTO} containing:
+     * - {@link DinosaurColorRegionDTO} containing:
      *   - colorRegion index
      *   - colorName
      *   - hexCode
@@ -92,10 +92,10 @@ public interface BreedingLinesRepo extends JpaRepository<BreedingLine, Long> {
      * - The ordering ensures regions are returned in numeric region order.
      *
      * @param breedingId breeding line identifier
-     * @return ordered list of {@link ColorRegionDTO} for display
+     * @return ordered list of {@link DinosaurColorRegionDTO} for display
      */
     @Query(
-            "SELECT NEW org.example.backend.DTOs.ColorRegionDTO(dc.colorRegion, ac.color.colorName, ac.color.colorHex) " +
+            "SELECT NEW org.example.backend.DTOs.DinosaurColorRegionDTO(dc.colorRegion, ac.color.colorName, ac.color.colorHex) " +
                     "FROM Dinosaur d " +
                     "JOIN DinoColors dc ON d.dinoId = dc.dinosaur.dinoId " +
                     "JOIN ArkColors ac ON dc.arkColor.colorId = ac.colorId " +
@@ -108,5 +108,5 @@ public interface BreedingLinesRepo extends JpaRepository<BreedingLine, Long> {
                     ") " +
                     "ORDER BY dc.colorRegion"
     )
-    List<ColorRegionDTO> getDisplayColorRegions(Long breedingId);
+    List<DinosaurColorRegionDTO> getDisplayColorRegions(Long breedingId);
 }

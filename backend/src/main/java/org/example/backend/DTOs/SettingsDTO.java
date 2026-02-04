@@ -44,6 +44,10 @@ public class SettingsDTO {
      */
     String settingsName;
 
+    Float imprintScale;
+
+    Boolean SinglePlayer;
+
     /**
      * Breeding-related configuration values.
      */
@@ -51,7 +55,6 @@ public class SettingsDTO {
 
     /**
      * Constructor used for lightweight settings listings.
-     *
      * Provides only the identifier and display name.
      */
     SettingsDTO(long settingsId, String settingsName) {

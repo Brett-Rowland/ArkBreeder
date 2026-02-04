@@ -2,10 +2,12 @@ package org.example.backend.Service;
 
 import lombok.AllArgsConstructor;
 import org.example.backend.DTOs.DinosaurInput;
+import org.example.backend.DTOs.DinosaurPageDTO;
 import org.example.backend.Domains.*;
 import org.example.backend.Repo.*;
 import org.example.backend.ValueObjects.StatPoints;
 import org.example.backend.ValueObjects.Stats;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -54,6 +56,8 @@ public class DinosaurService {
 
     /** Repository used to resolve Ark color IDs into {@link ArkColors} reference data. */
     ArkColorsRepo arkColorsRepo;
+
+    private static final PageRequest pageDefault = PageRequest.of(0, 50);
 
     /**
      * Creates a new dinosaur in a breeding line.
@@ -187,5 +191,31 @@ public class DinosaurService {
      */
     public Dinosaur grabDino(Long dinoId) {
         return dinosaurRepo.getDinosaurByDinoId(dinoId);
+    }
+
+
+
+    public DinosaurPageDTO buildDinosaurPage(Long lineId){
+        DinosaurPageDTO dinosaurPageDTO = new DinosaurPageDTO();
+
+//        First need to grab the Breeding Line Details
+        BreedingLine breedingLine = breedingLinesRepo.getBreedingLineByBreedingLineId(lineId);
+
+//        Set the settings and Creature up
+        dinosaurPageDTO.setSettingsDTO(breedingLine.getServer().convertToSettingsDTO());
+
+//        Grab the creatures details
+//
+        dinosaurPageDTO.setCreatureDTO(breedingLine.getCreature().toDTO());
+
+
+//        Grabbing all dinosaurs now for move over
+        List<Dinosaur> dinosaurs = dinosaurRepo.getDinosaurByBreedingLineId(breedingLine, pageDefault);
+
+        for (Dinosaur dinosaur : dinosaurs) {
+            System.out.println(dinosaur.getDinosaurNickname());
+        }
+
+        return dinosaurPageDTO;
     }
 }

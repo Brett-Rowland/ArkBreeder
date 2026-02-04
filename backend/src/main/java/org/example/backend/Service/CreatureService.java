@@ -3,7 +3,7 @@ package org.example.backend.Service;
 import lombok.AllArgsConstructor;
 
 import org.example.backend.DTOs.CreatureInput;
-import org.example.backend.DTOs.CreatureDTO;
+import org.example.backend.DTOs.ValidationCreatureDTO;
 import org.example.backend.DTOs.StatsDTO;
 import org.example.backend.Domains.BaseStats;
 import org.example.backend.Domains.ColorRegions;
@@ -170,9 +170,9 @@ public class CreatureService {
      *
      * Used for validation workflows to identify incomplete/unverified creatures.
      *
-     * @return list of {@link CreatureDTO} summary records
+     * @return list of {@link ValidationCreatureDTO} summary records
      */
-    public List<CreatureDTO> getUnvalidatedCreatures() {
+    public List<ValidationCreatureDTO> getUnvalidatedCreatures() {
         return creatureRepo.getUnvalidatedCreatures();
     }
 

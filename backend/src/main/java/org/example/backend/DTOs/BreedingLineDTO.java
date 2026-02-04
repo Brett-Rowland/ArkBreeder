@@ -50,7 +50,7 @@ public class BreedingLineDTO {
     /**
      * Color region metadata for the creature species.
      */
-    private List<ColorRegionDTO> colorRegions;
+    private List<DinosaurColorRegionDTO> colorRegions;
 
     /**
      * Computed maximum stat values for the breeding line.

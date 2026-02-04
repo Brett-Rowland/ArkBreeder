@@ -47,5 +47,5 @@ public class BreedingLinePageDTO {
     /**
      * List of creature species available for breeding lines.
      */
-    List<CreatureDTO> creatureList = new ArrayList<>();
+    List<ValidationCreatureDTO> creatureList = new ArrayList<>();
 }

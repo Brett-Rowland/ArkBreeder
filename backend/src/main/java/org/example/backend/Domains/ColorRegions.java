@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.example.backend.DTOs.CreatureRegionsDTO;
 
 /**
  * ColorRegions table.
@@ -91,4 +92,9 @@ public class ColorRegions {
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility")
     private Visibility visibility = Visibility.VISIBLE_COLOR;
+
+
+    public CreatureRegionsDTO toDTO() {
+        return new  CreatureRegionsDTO(this.colorRegion, this.regionDescriptor);
+    }
 }
