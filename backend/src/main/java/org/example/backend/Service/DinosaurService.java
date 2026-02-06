@@ -1,6 +1,7 @@
 package org.example.backend.Service;
 
 import lombok.AllArgsConstructor;
+import org.example.backend.DTOs.DinosaurDTO;
 import org.example.backend.DTOs.DinosaurInput;
 import org.example.backend.DTOs.DinosaurPageDTO;
 import org.example.backend.Domains.*;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class DinosaurService {
 
+    private final ComputationService computationService;
     /** Repository for breeding line lookup and ownership context. */
     BreedingLinesRepo breedingLinesRepo;
 
@@ -212,10 +214,19 @@ public class DinosaurService {
 //        Grabbing all dinosaurs now for move over
         List<Dinosaur> dinosaurs = dinosaurRepo.getDinosaurByBreedingLineId(breedingLine, pageDefault);
 
+
+//        Get the Hashmap for the Creature and Settings set up
+
+        Map<Stats.STATS, BaseStats> baseStatsMap = breedingLine.getCreature().baseStatsToMap();
+
+        Map<Stats.STATS, BreedingSettings> breedingSettingsMap = breedingLine.getServer().breedingSettingToMap();
+
+        List<DinosaurDTO> dinosaurDTOSList = new ArrayList<>();
         for (Dinosaur dinosaur : dinosaurs) {
-            System.out.println(dinosaur.getDinosaurNickname());
+            dinosaurDTOSList.add(computationService.dinosaurDTOAssembler(dinosaur, baseStatsMap, breedingSettingsMap));
         }
 
+        dinosaurPageDTO.setDinosaurDTOList(dinosaurDTOSList);
         return dinosaurPageDTO;
     }
 }

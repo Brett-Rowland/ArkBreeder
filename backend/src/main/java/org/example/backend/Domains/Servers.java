@@ -7,8 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.DTOs.SettingsDTO;
+import org.example.backend.ValueObjects.Stats;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Servers table.
@@ -154,5 +157,13 @@ public class Servers {
         settingsDTO.setImprintScale(this.imprintScale);
         settingsDTO.setSinglePlayer(this.singlePlayer);
         return settingsDTO;
+    }
+
+    public Map<Stats.STATS, BreedingSettings> breedingSettingToMap(){
+        return this.breedingSettings.stream().collect(Collectors.toMap(
+                BreedingSettings::getStats,
+                bs -> bs,
+                (a,b) -> a
+        ));
     }
 }

@@ -101,7 +101,7 @@ public class Dinosaur {
      *
      * These values are used as inputs for stat calculations.
      */
-    @OneToMany(mappedBy = "dinosaur", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dinosaur", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<DinosaurStats> dinosaurStats;
 

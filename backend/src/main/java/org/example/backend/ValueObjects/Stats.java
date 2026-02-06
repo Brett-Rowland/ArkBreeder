@@ -66,4 +66,19 @@ public class Stats {
      */
     @Enumerated(value = EnumType.ORDINAL)
     public STATS statType;
+
+
+
+    public Boolean isLightPet(){
+        return this.statType == Stats.STATS.CHARGE_CAPACITY || this.statType == Stats.STATS.CHARGE_REGENERATION || this.statType == Stats.STATS.CHARGE_EMISSION_RANGE;
+    }
+
+    public Stats.STATS getLightPetStats(){
+        return switch (this.statType) {
+            case CHARGE_CAPACITY -> Stats.STATS.STAMINA;
+            case CHARGE_REGENERATION -> Stats.STATS.OXYGEN;
+            case CHARGE_EMISSION_RANGE -> Stats.STATS.MELEE;
+            default -> statType;
+        };
+    }
 }

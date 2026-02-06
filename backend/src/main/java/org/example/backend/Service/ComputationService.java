@@ -15,21 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * TODO: dinoComputation update Color Regions to bring back actual colors assigned to each region
- *
- * One sample
- *
- *  "dinoColorID": 5,
- *  "colorRegion": 4
- *
- * Should be
- *  "dinoColorID": 5,
- *  "colorRegion": 4
- *
- *
- * */
-
 
 
 /**
@@ -60,6 +45,7 @@ public class ComputationService {
     private final DinosaurRepo dinosaurRepo;
     private final BaseStatsRepo baseStatsRepo;
     private final DinosaurStatsRepo dinosaurStatsRepo;
+    private final CreatureRepo creatureRepo;
 
     /**
      * Core stat calculation function.
@@ -136,19 +122,6 @@ public class ComputationService {
         return bs.getStats().getBaseValue() * (1 + totalPoints * bs.getStats().getIncrementPerPoint());
     }
 
-    public Boolean isLightPet(Stats.STATS statType){
-        return statType == Stats.STATS.CHARGE_CAPACITY || statType == Stats.STATS.CHARGE_REGENERATION || statType == Stats.STATS.CHARGE_EMISSION_RANGE;
-    }
-
-    public Stats.STATS getLightPetStats(Stats.STATS statType){
-        return switch (statType) {
-            case CHARGE_CAPACITY -> Stats.STATS.STAMINA;
-            case CHARGE_REGENERATION -> Stats.STATS.OXYGEN;
-            case CHARGE_EMISSION_RANGE -> Stats.STATS.MELEE;
-            default -> statType;
-        };
-    }
-
     /**
      * Computes and returns a fully computed dinosaur view ({@link DinosaurDTO}).
      *
@@ -172,7 +145,6 @@ public class ComputationService {
      * @return computed {@link DinosaurDTO} for display/usage
      */
     public DinosaurDTO dinoComputation(Long dinoId){
-        DinosaurDTO dinosaurTransfer = new DinosaurDTO();
         Dinosaur dinosaur = dinosaurRepo.getDinosaurByDinoId(dinoId);
         BreedingLine breedingLine = dinosaur.getBreedingLineId();
         Servers server = breedingLine.getServer();
@@ -180,69 +152,13 @@ public class ComputationService {
 
 //        Grab Defaults and Base Stats for everything
         List<BreedingSettings> settings  = server.getBreedingSettings();
-        List<BaseStats> baseStats = creature.getBaseStats();
-        List<DinosaurStats> dinosaurStats = dinosaur.getDinosaurStats();
-        List<StatsDTO> transferComputedStats = new ArrayList<>();
-
-
 
 //        Get Hashmaps for both the baseStats and Breeding Settings
+        Map<Stats.STATS, BaseStats> baseStatsMap = creature.baseStatsToMap();
 
-        Map<Stats.STATS, BaseStats> baseStatsMap = baseStats.stream().collect(Collectors.toMap(
-                bs -> bs.getStats().getStatType(),
-                bs -> bs,
-                (a,b) -> a
-        ));
+        Map<Stats.STATS, BreedingSettings> breedingSettingsMap = server.breedingSettingToMap();
 
-        Map<Stats.STATS, BreedingSettings> breedingSettingsMap = settings.stream().collect(Collectors.toMap(
-                BreedingSettings::getStats,
-                bs -> bs,
-                (a,b) -> a
-        ));
-
-        for (DinosaurStats dinosaurStat : dinosaurStats) {
-            Stats.STATS statType = dinosaurStat.getStats().getStatType();
-            StatsDTO statsDTO = new StatsDTO();
-            statsDTO = statsDTO.setUpStatsDTO(dinosaurStat);
-
-//            Grab the base stat matching
-            BaseStats baseStat = baseStatsMap.get(statType);
-            if (baseStat == null){
-                continue;
-            }
-
-            if (Stats.STATS.CRAFTING == statType) {
-                statsDTO.setCalcTotal(calculateCrafting(baseStat, statsDTO.getTotalPoints()));
-                continue;
-            }
-
-
-//            Grab the breeding Stats
-            BreedingSettings breedingSettings = breedingSettingsMap.get(statType);
-            if (isLightPet(statType)) {
-                breedingSettings = breedingSettingsMap.get(getLightPetStats(statType));
-            }
-
-            if (breedingSettings == null) {
-                continue;
-            }
-
-            statsDTO.setCalcTotal(calculation(breedingSettings, baseStat, statsDTO.getTotalPoints(), dinosaur.getTamingEffectiveness(), statType));
-
-            transferComputedStats.add(statsDTO);
-
-        }
-
-        dinosaurTransfer.setStats(transferComputedStats);
-
-        List<DinosaurColorRegionDTO> dinosaurColorRegionDTOS = new ArrayList<>();
-        for (DinoColors dinoColors : dinosaur.getDinoColors()) {
-            dinosaurColorRegionDTOS.add(dinoColors.toDTO());
-        }
-        dinosaurTransfer.setColorRegions(dinosaurColorRegionDTOS);
-        dinosaurTransfer.setDinoId(dinosaur.getDinoId());
-        dinosaurTransfer.setDinosaurNickname(dinosaur.getDinosaurNickname());
-        return dinosaurTransfer;
+        return dinosaurDTOAssembler(dinosaur, baseStatsMap, breedingSettingsMap);
     }
 
     /**
@@ -262,19 +178,13 @@ public class ComputationService {
      */
     public List<StatsDTO> validation(ValidationInput validationInput){
 //        Need to get my Base Stats first
-        List<BaseStats> baseStats = baseStatsRepo.getBaseStatsASCById(validationInput.getCreatureId());
+        Creature creature = creatureRepo.getCreatureByCreatureId(validationInput.getCreatureId());
         List<StatsDTO> statsTransfers = validationInput.getStats();
         List<BreedingSettings> breedingSettings = validationInput.getBreedingSettings();
 
 //        Build up hashmaps for both the breeding Settings and baseStats. Cycle through the entire statsTransfers grabbing the responsible I
 
-        Map<Stats.STATS, BaseStats> baseByType = baseStats.stream().collect(Collectors.toMap(
-                bs -> bs.getStats().getStatType(),
-                bs-> bs,
-                (a,b) -> a
-        ));
-
-
+        Map<Stats.STATS, BaseStats> baseByType = creature.baseStatsToMap();
         Map<Stats.STATS, BreedingSettings> breedingSettingsMap = breedingSettings.stream().collect(Collectors.toMap(
                 BreedingSettings::getStats,
                 bs -> bs,
@@ -283,6 +193,7 @@ public class ComputationService {
 
 
         for (StatsDTO statsDTO : statsTransfers) {
+            Stats stat = new Stats(statsDTO.getStatType());
             Stats.STATS statType =  statsDTO.getStatType();
 
 //            Grab the Base Stats
@@ -300,8 +211,8 @@ public class ComputationService {
             BreedingSettings breedingSetting;
 
 //            Check to see if it is lightPet
-            if (isLightPet(statType)) {
-                breedingSetting = breedingSettingsMap.get(getLightPetStats(statType));
+            if (stat.isLightPet()) {
+                breedingSetting = breedingSettingsMap.get(stat.getLightPetStats());
             }
             else{
                 breedingSetting = breedingSettingsMap.get(statType);
@@ -314,4 +225,60 @@ public class ComputationService {
         }
         return  statsTransfers;
     }
+
+
+    public DinosaurDTO dinosaurDTOAssembler(Dinosaur dinosaur, Map<Stats.STATS, BaseStats> baseStatsMap, Map<Stats.STATS, BreedingSettings> breedingSettingsMap) {
+        DinosaurDTO dinosaurDTO = new DinosaurDTO();
+        List<StatsDTO> transferComputedStats = new ArrayList<>();
+
+
+        for (DinosaurStats dinosaurStat : dinosaur.getDinosaurStats()) {
+            Stats stat = dinosaurStat.getStats();
+            Stats.STATS statType = stat.getStatType();
+            StatsDTO statsDTO = new StatsDTO();
+            statsDTO = statsDTO.setUpStatsDTO(dinosaurStat);
+
+//            Grab the base stat matching
+            BaseStats baseStat = baseStatsMap.get(statType);
+            if (baseStat == null){
+                continue;
+            }
+
+            if (Stats.STATS.CRAFTING == statType) {
+                statsDTO.setCalcTotal(calculateCrafting(baseStat, statsDTO.getTotalPoints()));
+                continue;
+            }
+
+
+//            Grab the breeding Stats
+            BreedingSettings breedingSettings;
+            if (stat.isLightPet()) {
+                breedingSettings = breedingSettingsMap.get(stat.getLightPetStats());
+            }
+            else{
+                breedingSettings = breedingSettingsMap.get(statType);
+            }
+
+            if (breedingSettings == null) {
+                continue;
+            }
+
+            statsDTO.setCalcTotal(calculation(breedingSettings, baseStat, statsDTO.getTotalPoints(), dinosaur.getTamingEffectiveness(), statType));
+
+            transferComputedStats.add(statsDTO);
+
+        }
+        dinosaurDTO.setStats(transferComputedStats);
+
+        List<DinosaurColorRegionDTO> dinosaurColorRegionDTOS = new ArrayList<>();
+        for (DinoColors dinoColors : dinosaur.getDinoColors()) {
+            dinosaurColorRegionDTOS.add(dinoColors.toDTO());
+        }
+        dinosaurDTO.setColorRegions(dinosaurColorRegionDTOS);
+        dinosaurDTO.setDinoId(dinosaur.getDinoId());
+        dinosaurDTO.setDinosaurNickname(dinosaur.getDinosaurNickname());
+
+        return dinosaurDTO;
+    }
+
 }

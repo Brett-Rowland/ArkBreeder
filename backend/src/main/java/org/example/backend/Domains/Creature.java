@@ -9,10 +9,13 @@ import org.example.backend.DTOs.BaseStatsDTO;
 import org.example.backend.DTOs.CreatureDTO;
 import org.example.backend.DTOs.CreatureRegionsDTO;
 import org.example.backend.DTOs.ValidationCreatureDTO;
+import org.example.backend.ValueObjects.Stats;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Creature table.
@@ -133,6 +136,14 @@ public class Creature {
         }
         creatureDTO.setColorRegionsList(creatureRegionsDTOs);
         return creatureDTO;
+    }
+
+    public Map<Stats.STATS, BaseStats> baseStatsToMap(){
+     return  this.baseStats.stream().collect(Collectors.toMap(
+                bs -> bs.getStats().getStatType(),
+                bs -> bs,
+                (a,b) -> a
+        ));
     }
 
 
